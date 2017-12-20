@@ -50,7 +50,7 @@ public class Main : MonoBehaviour {
 
     private void EditMode() {
         editorMode = true;
-        string json = SaveLoad.LoadMap();
+        string json = SaveLoad.LoadMap("null");
 
         if (json == null) {
             GameController.GetComponent<Game>().GenerateMap();
@@ -66,7 +66,7 @@ public class Main : MonoBehaviour {
 
     //start the game
     private void StartGame() {
-        string json = SaveLoad.LoadMap();
+        string json = SaveLoad.LoadMap("level01");
         if (json == null) {
             return;
         }

@@ -12,7 +12,10 @@ public class Editor : MonoBehaviour {
     public CanvasGroup editorMenu;
     public Button currentTileBtn;
     public Button backBtn;
-    public Image background;
+    public Button saveMenuBtn, loadMenuBtn;
+    public Button saveBtn, loadBtn;
+    public InputField saveInputField, loadInputField;
+    public CanvasGroup saveMenu, loadMenu;
 
     //tiles in editor, not game object
     private GameObject[] tiles;
@@ -20,8 +23,11 @@ public class Editor : MonoBehaviour {
     public Button tilePrefabBtn;
     public Transform tileHolder;
 
+    public static bool allowCameraMovement = true;
+    private static GameObject gridTile;
+
     //filter out things I do not want the players to touch
-    private static string[] filterTiles = new string[] { "outerWall" };
+    private static string[] filterTiles = new string[] { "outerWall", "grid" };
 
     public static bool FilterTile(string tile) {
         foreach (var t in filterTiles) {
@@ -36,6 +42,7 @@ public class Editor : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         tiles = Resources.LoadAll<GameObject>("Tiles/");
+        gridTile = Resources.Load<GameObject>("Tiles/grid");
 
         int tileCount = 1;
         foreach(var t in tiles) {
@@ -67,23 +74,88 @@ public class Editor : MonoBehaviour {
             }
 
             button.transform.position = position;
-            button.onClick.AddListener(SelectTile);
+            button.onClick.AddListener(OnClickTile);
             tileCount += 1;
         }
 
-        //default selected tile
-        selectedTile = Resources.Load<GameObject>("Tiles/grid");
+        // Default selected tile.
+        SelectTile(tiles[0]);
+        saveMenuBtn.onClick.AddListener(ShowSaveMenu);
+        loadMenuBtn.onClick.AddListener(ShowLoadMenu);
+        saveBtn.onClick.AddListener(SaveMap);
+        loadBtn.onClick.AddListener(LoadMap);
         backBtn.onClick.AddListener(BackToMenu);
 
-        //auto hide menu on startup
+
+        // Auto hide menu on startup.
         HideMenu();
 	}
 
-    void SelectTile() {
+    private void SaveMap() {
+        string fileName = saveInputField.text;
+        SaveLoad.SaveMap(fileName);
+
+        allowCameraMovement = true;
+        ShowSaveMenu();
+    }
+
+    private void LoadMap() {
+        string fileName = loadInputField.text;
+        string json = SaveLoad.LoadMap(fileName);
+
+        // Generate map and close menu
+        if (json != null) {
+            GameController.ClearMap();
+            GameController.GenerateMapFromJson(json);
+            ShowLoadMenu();
+        }
+
+        allowCameraMovement = true;
+    }
+
+    private void ShowSaveMenu() {
+        // Show save menu
+        if (saveMenu.alpha == 0f) {
+            saveMenu.alpha = 1f;
+            saveMenu.blocksRaycasts = true;
+            loadMenu.alpha = 0f;
+            loadMenu.blocksRaycasts = false;
+            allowCameraMovement = false;
+        } else {
+            saveMenu.alpha = 0f;
+            saveMenu.blocksRaycasts = false;
+            allowCameraMovement = true;
+        }
+    }
+
+    private void ShowLoadMenu() {
+        // Show menu
+        if (loadMenu.alpha == 0f) {
+            saveMenu.alpha = 0f;
+            saveMenu.blocksRaycasts = false;
+            loadMenu.alpha = 1f;
+            loadMenu.blocksRaycasts = true;
+            allowCameraMovement = false;
+        } else {
+            loadMenu.alpha = 0f;
+            loadMenu.blocksRaycasts = false;
+            allowCameraMovement = true;
+        }
+    }
+
+    private void OnClickTile() {
         GameObject clickedTile = EventSystem.current.currentSelectedGameObject;
 
-        currentTileBtn.GetComponent<Image>().sprite = clickedTile.GetComponent<Image>().sprite;
-        selectedTile = Resources.Load<GameObject>("Tiles/" + clickedTile.name);
+        SelectTile(clickedTile);
+    }
+
+    private void SelectTile(GameObject tile) {
+        if (tile.GetComponent<Image>())
+            currentTileBtn.GetComponent<Image>().sprite = tile.GetComponent<Image>().sprite;
+        else
+            currentTileBtn.GetComponent<Image>().sprite = tile.GetComponent<SpriteRenderer>().sprite;
+
+        selectedTile = Resources.Load<GameObject>("Tiles/" + tile.name);
         //print(string.Format("{0}", clickedTile.name));
     }
 	
@@ -91,8 +163,9 @@ public class Editor : MonoBehaviour {
 	void Update () {
         if (!Main.EditorMode) return;
 
-        
-        if (Input.GetMouseButton(0) && selectedTile != null) {
+        bool leftClick = Input.GetMouseButton(0);
+        bool rightClick = Input.GetMouseButton(1);
+        if (leftClick || rightClick && selectedTile != null) {
 
             //check if mouse is on UI
             PointerEventData pointerData = new PointerEventData(EventSystem.current) {
@@ -115,8 +188,14 @@ public class Editor : MonoBehaviour {
             RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
             if (hit.collider != null && hit.collider.GetComponent<EditableTile>()) {
                 GameObject tile = hit.collider.gameObject;
-                tile.GetComponent<SpriteRenderer>().sprite = selectedTile.GetComponent<SpriteRenderer>().sprite;
-                tile.name = selectedTile.name;
+
+                if (leftClick) {
+                    tile.GetComponent<SpriteRenderer>().sprite = selectedTile.GetComponent<SpriteRenderer>().sprite;
+                    tile.name = selectedTile.name;
+                } else if (rightClick) {
+                    tile.GetComponent<SpriteRenderer>().sprite = gridTile.GetComponent<SpriteRenderer>().sprite;
+                    tile.name = gridTile.name;
+                }
             }
         }
         
@@ -131,7 +210,7 @@ public class Editor : MonoBehaviour {
     }
 
     public void BackToMenu() {
-        SaveLoad.SaveMap();
+        SaveLoad.SaveMap("test");
         GameController.ClearMap();
 
         HideMenu();

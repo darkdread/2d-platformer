@@ -42,7 +42,7 @@ public class CameraController : MonoBehaviour {
 
         Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, targetOrtho, smoothSpeed * Time.deltaTime);
 
-        if (Main.EditorMode) {
+        if (Main.EditorMode && Editor.allowCameraMovement) {
             float xCamera = Input.GetAxisRaw("Horizontal") * moveSpeed;
             float yCamera = Input.GetAxisRaw("Vertical") * moveSpeed;
             targetPosition = new Vector3(transform.position.x + xCamera, transform.position.y + yCamera, transform.position.z);

@@ -19,8 +19,16 @@ public class Game : SerializedMonoBehaviour {
     public GameObject gameHolder;
     public CameraController cameraController;
 
-    //public static Dictionary<Vector2, GameObject> tiles;
+    private bool combined;
     public static GameObject[,] tiles;
+    private static int[,] NEIGHBOURS = {
+    {-1, -1}, {0, -1}, {+1, -1},
+    {-1, 0},           {+1, 0},
+    {-1, +1}, {0, +1}, {+1, +1}};
+
+    // [the offset array, the offset array's element index]
+    // to get +1, do [5, 1]
+    // {-1, +1}
 
     public GameObject[,] Tiles {
         get {
@@ -34,6 +42,7 @@ public class Game : SerializedMonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        print(NEIGHBOURS[5, 1]);
         TileDictionary = myDictionary.TileDictionary;
         tiles = new GameObject[gridWidth, gridHeight];
 	}
@@ -52,11 +61,12 @@ public class Game : SerializedMonoBehaviour {
 
     public GameObject AddTile(string type, Vector3 position) {
         GameObject tile = Instantiate(Resources.Load<GameObject>("Tiles/" + type));
+
         tile.name = type;
         tile.transform.position = position;
         tile.transform.SetParent(gameHolder.transform);
         
-        //pause the tile from moving
+        // Disable the tile from moving & make tile editable
         if (Main.EditorMode) {
             if (!Editor.FilterTile(tile.name)) {
                 tile.AddComponent<EditableTile>();
@@ -78,21 +88,68 @@ public class Game : SerializedMonoBehaviour {
         }
     }
 
+    private List<GameObject> GetNeighborTiles(GameObject tile) {
+        int x = (int)tile.transform.position.x;
+        int y = (int)tile.transform.position.y;
+        List<GameObject> neighbourTiles = new List<GameObject>();
+        int count = 0;
+
+        for (int i = 0; i < NEIGHBOURS.GetLength(0); i++) {
+            int xPos = x + NEIGHBOURS[i, 0];
+            int yPos = y + NEIGHBOURS[i, 1];
+
+            // If the position is not out of bounds
+            if ((xPos >= 0 && xPos < tiles.GetLength(0)) && (yPos >= 0 && yPos < tiles.GetLength(1))){
+                GameObject selectedTile = tiles[xPos, yPos];
+
+                // Why check if tile is alive? Because we are getting tiles while we are creating it. Will return 4 results (excluding self) when creating and searching
+                /* {tile}    {tile}   {not created}
+                 * {tile}    {self}   {not created}
+                   {tile}{not created}{not created}
+                */
+                if (selectedTile != null) {
+                    //print(string.Format("x: {0}, y: {1}, name: {2}", xPos, yPos, selectedTile.gameObject.name));
+                    //neighbourTiles[count] = selectedTile;
+                    neighbourTiles.Add(selectedTile);
+                    count++;
+                }
+            }
+        }
+
+        return neighbourTiles;
+    }
+
+    private void CombineCollider(GameObject tile) {
+        if (tile.CompareTag("Ground") && tile.GetComponent<BoxCollider2D>()) {
+
+            List<GameObject> neighbors = GetNeighborTiles(tile);
+
+            foreach(var neighbor in neighbors) {
+                if (neighbor.CompareTag("Ground")) {
+                    // Combine the box collider and remove its component
+                }
+            }
+            
+            //tiles[x, y];
+        }
+    }
+
     public void GenerateMapFromJson(string json) {
         GameObjectInScene[] goList = JsonHelper.FromJson<GameObjectInScene>(json);
 
         foreach(var t in goList) {
             GameObject tile = AddTile(t.name, t.position);
-            int xPos = (int)t.position.x;
-            int yPos = (int)t.position.y;
+            CombineCollider(tile);
 
             //playing the game
             if (!Main.EditorMode) {
                 switch (t.name) {
-                    case "player":
+                    case "Main Character":
+                    case "playerr":
                         cameraController.player = tile;
                         break;
                     case "grid":
+                        // It doesn't remove the tile from the array
                         Destroy(tile);
                         break;
                 }

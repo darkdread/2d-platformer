@@ -5,9 +5,13 @@ using UnityEngine;
 [System.Serializable]
 public class EditableTile : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-        
+    Tile tile;
+    SpriteRenderer spriteRenderer;
+
+    // Use this for initialization
+    void Start () {
+        tile = new Tile(gameObject);
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 	
 	// Update is called once per frame
@@ -20,10 +24,15 @@ public class EditableTile : MonoBehaviour {
     }
 
     private void OnMouseOver() {
-        GetComponent<SpriteRenderer>().color = Color.red;
+        
+        if (tile.IsEditable()) {
+            spriteRenderer.color = Color.red;
+        }
     }
 
     private void OnMouseExit() {
-        GetComponent<SpriteRenderer>().color = Color.white;
+        if (tile.IsEditable()) {
+            spriteRenderer.color = Color.white;
+        }
     }
 }
