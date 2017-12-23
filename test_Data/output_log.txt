@@ -23,7 +23,7 @@ Platform assembly: E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\
 Loading E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\Sirenix.Serialization.dll into Unity Child Domain
 Platform assembly: E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\Sirenix.Utilities.dll (this message is harmless)
 Loading E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\Sirenix.Utilities.dll into Unity Child Domain
-- Completed reload, in  0.347 seconds
+- Completed reload, in  0.016 seconds
 Platform assembly: E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 144Hz; virtual: 1920x1080 at 0,0
@@ -31,13 +31,34 @@ desktop: 1920x1080 144Hz; virtual: 1920x1080 at 0,0
 <RI> Input initialized.
 <RI> Initialized touch support.
 Platform assembly: E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\Mono.Security.dll (this message is harmless)
-UnloadTime: 0.812525 ms
-1
+UnloadTime: 0.795630 ms
+IndexOutOfRangeException: Array index is out of range.
+  at Game.AddTile (System.String type, Vector3 position) [0x00000] in <filename unknown>:0 
+  at Game.GenerateMapFromJson (System.String json) [0x00000] in <filename unknown>:0 
+  at Main.StartGame () [0x00000] in <filename unknown>:0 
+  at UnityEngine.Events.InvokableCall.Invoke (System.Object[] args) [0x00000] in <filename unknown>:0 
+  at UnityEngine.Events.InvokableCallList.Invoke (System.Object[] parameters) [0x00000] in <filename unknown>:0 
+  at UnityEngine.Events.UnityEventBase.Invoke (System.Object[] parameters) [0x00000] in <filename unknown>:0 
+  at UnityEngine.Events.UnityEvent.Invoke () [0x00000] in <filename unknown>:0 
+  at UnityEngine.UI.Button.Press () [0x00000] in <filename unknown>:0 
+  at UnityEngine.UI.Button.OnPointerClick (UnityEngine.EventSystems.PointerEventData eventData) [0x00000] in <filename unknown>:0 
+  at UnityEngine.EventSystems.ExecuteEvents.Execute (IPointerClickHandler handler, UnityEngine.EventSystems.BaseEventData eventData) [0x00000] in <filename unknown>:0 
+  at UnityEngine.EventSystems.ExecuteEvents.Execute[IPointerClickHandler] (UnityEngine.GameObject target, UnityEngine.EventSystems.BaseEventData eventData, UnityEngine.EventSystems.EventFunction`1 functor) [0x00000] in <filename unknown>:0 
+UnityEngine.DebugLogHandler:Internal_LogException(Exception, Object)
+UnityEngine.DebugLogHandler:LogException(Exception, Object)
+UnityEngine.Logger:LogException(Exception, Object)
+UnityEngine.Debug:LogException(Exception)
+UnityEngine.EventSystems.ExecuteEvents:Execute(GameObject, BaseEventData, EventFunction`1)
+UnityEngine.EventSystems.StandaloneInputModule:ProcessMousePress(MouseButtonEventData)
+UnityEngine.EventSystems.StandaloneInputModule:ProcessMouseEvent(Int32)
+UnityEngine.EventSystems.StandaloneInputModule:ProcessMouseEvent()
+UnityEngine.EventSystems.StandaloneInputModule:Process()
+UnityEngine.EventSystems.EventSystem:Update()
  
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+(Filename:  Line: -1)
 
 Setting up 4 worker threads for Enlighten.
-  Thread -> id: 4350 -> priority: 1 
-  Thread -> id: 4b84 -> priority: 1 
-  Thread -> id: 5360 -> priority: 1 
-  Thread -> id: 3a64 -> priority: 1 
+  Thread -> id: c90 -> priority: 1 
+  Thread -> id: 44d8 -> priority: 1 
+  Thread -> id: 3ed4 -> priority: 1 
+  Thread -> id: 24b4 -> priority: 1 

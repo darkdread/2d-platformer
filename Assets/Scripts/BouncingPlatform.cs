@@ -5,7 +5,7 @@ using UnityEngine;
 public class BouncingPlatform : MonoBehaviour {
     
     //the default sprite
-    public Sprite ready;
+    public Sprite defaultState;
     //the sprite when it is pressed down
     public Sprite fire;
     //the ground detector
@@ -16,11 +16,12 @@ public class BouncingPlatform : MonoBehaviour {
     public float groundRadius;
 
     //the collider when it's ready (bigger)
-    public BoxCollider2D readyCollider;
+    public BoxCollider2D defaultCollider;
     //the collider when it's firing (smaller)
     public BoxCollider2D fireCollider;
     //this collider
     private BoxCollider2D[] boxCollider2D;
+    private Vector2[] colliders;
 
     //how much the impact will be
     public float force;
@@ -32,6 +33,10 @@ public class BouncingPlatform : MonoBehaviour {
     //the sprite renderer for this game object
     private SpriteRenderer spriteRenderer;
 
+    // The collision results returned when searching for colliders during Physics2D.OverlapCircle
+    private Collider2D[] collisionResults;
+    private bool isInArray;
+
     // Use this for initialization
     void Start () {
         //default timer
@@ -40,18 +45,25 @@ public class BouncingPlatform : MonoBehaviour {
         spriteRenderer = GetComponent<SpriteRenderer>();
         //collider -> Both the trigger and the default
         boxCollider2D = GetComponents<BoxCollider2D>();
+
+        // Clone the colliders (They should not be references, or else if I change the collider, both of them will change)
+        // Lazy coding OMEGALUL
+        colliders = new Vector2[4];
+        colliders[0] = fireCollider.size;
+        colliders[1] = fireCollider.offset;
+        colliders[2] = fireCollider.size;
+        colliders[3] = fireCollider.offset;
+
     }
 	
 	// Update is called once per frame
 	void Update () {
+        if (Main.EditorMode) return;
 
-    }
+        // Get an array of the objects above the platform
+        Collider2D[] smthAbove = Physics2D.OverlapCircleAll(groundDetector.position, groundRadius, layerMask);
 
-    private void OnTriggerStay2D(Collider2D collision) {
-        //if the collider is itself, don't do anything
-        if (collision.CompareTag("BouncingPlatform")) return;
-
-        if (Mathf.Abs(collision.transform.position.y - transform.position.y) > 0.5) {
+        if (smthAbove.Length > 0) {
             //decrease the timer
             activateTimer -= Time.deltaTime;
 
@@ -60,7 +72,8 @@ public class BouncingPlatform : MonoBehaviour {
                 spriteRenderer.sprite = fire;
                 //change the collision box size to fit the firing state
                 foreach (BoxCollider2D collider in boxCollider2D) {
-                    collider.size = fireCollider.size;
+                    collider.size = colliders[2];
+                    collider.offset = colliders[3];
                 }
             }
 
@@ -68,35 +81,36 @@ public class BouncingPlatform : MonoBehaviour {
             if (activateTimer <= 0) {
                 //force value
                 Vector2 force = new Vector2(0, this.force);
-                //apply force to rigidbody
-                collision.GetComponent<Rigidbody2D>().AddForce(force, ForceMode2D.Impulse);
 
-                //reset the platform
-                OnTriggerExit2D(collision.GetComponent<Collider2D>());
+                //apply force to rigidbody
+                foreach (Collider2D obj in smthAbove) {
+                    obj.GetComponent<Rigidbody2D>().AddForce(force, ForceMode2D.Impulse);
+                }
+
+                ResetPlatform();
             }
+        } else {
+            ResetPlatform();
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision) {
-        //if the collider is itself, don't do anything
-        if (collision.CompareTag("BouncingPlatform") || spriteRenderer.sprite == ready) return;
+    private void ResetPlatform() {
+        if (spriteRenderer.sprite == defaultState)
+            return;
 
-        bool smthAbove = Physics2D.OverlapCircle(groundDetector.position, groundRadius, layerMask);
+        print("reset!");
 
-        //if the collided target is above this platform or the timer have started and something left
-        if (smthAbove || activateTimer > 0) {
-            //reset the timer
-            activateTimer = activationTimer;
+        //reset the timer
+        activateTimer = activationTimer;
+        
+        //reset the sprite
+        spriteRenderer.sprite = defaultState;
 
-            if (spriteRenderer.sprite != ready) {
-                //reset the sprite
-                spriteRenderer.sprite = ready;
-
-                //reset the collision box
-                foreach (BoxCollider2D collider in boxCollider2D) {
-                    collider.size = readyCollider.size;
-                }
-            }
+        //reset the collision box
+        foreach (BoxCollider2D collider in boxCollider2D) {
+            collider.size = colliders[0];
+            collider.offset = colliders[1];
         }
+
     }
 }

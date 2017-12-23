@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Player : MonoBehaviour {
     private const float defaultJumpSpeed = 8f;
@@ -13,7 +14,7 @@ public class Player : MonoBehaviour {
     //to check if the player is on the ground
     public Transform groundCheck;
     public float groundCheckRadius;
-    public LayerMask realGround;
+    public LayerMask[] realGround;
     public bool isGrounded;
 
     //the respawn position of the player
@@ -34,6 +35,8 @@ public class Player : MonoBehaviour {
     //to apply physics for the player
     public Rigidbody2D rb;
 
+    public UnityEvent JumpEvent;
+
     // Use this for initialization
     void Start() {
         rb = GetComponent<Rigidbody2D>();
@@ -50,8 +53,22 @@ public class Player : MonoBehaviour {
         if (Main.EditorMode) return;
         //get player's input on the horizontal axis.
         var x = Input.GetAxisRaw("Horizontal");
+
         //check if the player is on the ground.
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, realGround);
+        foreach (LayerMask mask in realGround) {
+            Collider2D[] result = Physics2D.OverlapCircleAll(groundCheck.position, groundCheckRadius, mask);
+            
+            // Make sure we aren't checking for the player itself
+            foreach(Collider2D collider in result) {
+                if (collider.gameObject.GetInstanceID() != this.gameObject.GetInstanceID()) {
+                    isGrounded = true;
+                    goto End;
+                } else {
+                    isGrounded = false;
+                }
+            }
+        }
+        End:;
 
         //round the player's y axis
         if (isGrounded) {
@@ -80,6 +97,7 @@ public class Player : MonoBehaviour {
             if (Input.GetButtonDown("Jump") && isGrounded) {
                 //the player jumps according to the jump speed.
                 rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+                JumpEvent.Invoke();
             }
         } else if (knockbackTimer > 0) {
             //if the player is getting knockedbacked, decrease the timer

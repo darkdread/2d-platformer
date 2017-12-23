@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -25,9 +27,12 @@ public class Editor : MonoBehaviour {
 
     public static bool allowCameraMovement = true;
     private static GameObject gridTile;
+    private static string folderName = "Objects";
+    private static GameObject lastHoveredTile;
 
-    //filter out things I do not want the players to touch
-    private static string[] filterTiles = new string[] { "outerWall", "grid" };
+    //filter out things I do not want the players to touch/edit/place/whatever
+    public static Dictionary<string, Tile> EditableTiles = new Dictionary<string, Tile>();
+    private static string[] filterTiles = new string[] { "OuterWall" };
 
     public static bool FilterTile(string tile) {
         foreach (var t in filterTiles) {
@@ -41,13 +46,18 @@ public class Editor : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        tiles = Resources.LoadAll<GameObject>("Tiles/");
-        gridTile = Resources.Load<GameObject>("Tiles/grid");
+        tiles = Resources.LoadAll<GameObject>(string.Format("{0}/", folderName));
+        gridTile = Resources.Load<GameObject>(string.Format("{0}/Grid", folderName));
+        Tile[] allTiles = Resources.LoadAll<Tile>("Objects");
+        foreach (Tile tile in allTiles) {
+            string tileName = tile.name;
+            EditableTiles.Add(tileName, tile);
+        }
 
         int tileCount = 1;
         foreach(var t in tiles) {
-            //things i do not want players to place/edit
-            if (FilterTile(t.name)) {
+            // Things I do not want players to place/edit. Grid is an exceptional case as I want them to be editable BUT not show in the menu.
+            if (FilterTile(t.name) || t.name == "Grid") {
                 continue;
             }
             Button button = Instantiate<Button>(tilePrefabBtn);
@@ -143,20 +153,41 @@ public class Editor : MonoBehaviour {
         }
     }
 
+    // Clicking on Menu Tiles
     private void OnClickTile() {
         GameObject clickedTile = EventSystem.current.currentSelectedGameObject;
 
         SelectTile(clickedTile);
     }
 
+    // Change selected tile
     private void SelectTile(GameObject tile) {
         if (tile.GetComponent<Image>())
             currentTileBtn.GetComponent<Image>().sprite = tile.GetComponent<Image>().sprite;
         else
             currentTileBtn.GetComponent<Image>().sprite = tile.GetComponent<SpriteRenderer>().sprite;
 
-        selectedTile = Resources.Load<GameObject>("Tiles/" + tile.name);
-        //print(string.Format("{0}", clickedTile.name));
+        selectedTile = Resources.Load<GameObject>(string.Format("{0}/{1}", folderName, tile.name));
+    }
+
+    private bool IsPointerOnUI() {
+        //check if mouse is on UI
+        PointerEventData pointerData = new PointerEventData(EventSystem.current) {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        if (results.Count > 0) {
+            foreach (var result in results) {
+                if (result.gameObject.layer == LayerMask.NameToLayer("UI")) {
+                    //print("is ui! stop! " + result.gameObject.name);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 	
 	// Update is called once per frame
@@ -165,36 +196,50 @@ public class Editor : MonoBehaviour {
 
         bool leftClick = Input.GetMouseButton(0);
         bool rightClick = Input.GetMouseButton(1);
-        if (leftClick || rightClick && selectedTile != null) {
-
-            //check if mouse is on UI
-            PointerEventData pointerData = new PointerEventData(EventSystem.current) {
-                position = Input.mousePosition
-            };
-
-            List<RaycastResult> results = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(pointerData, results);
-
-            if (results.Count > 0) {
-                foreach (var result in results) {
-                    if (result.gameObject.layer == LayerMask.NameToLayer("UI")) {
-                        //print("is ui! stop! " + result.gameObject.name);
-                        return;
-                    }
-                }
+        if (lastHoveredTile != null) {
+            if (lastHoveredTile.name == gridTile.name) {
+                lastHoveredTile.GetComponent<SpriteRenderer>().sprite = gridTile.GetComponent<SpriteRenderer>().sprite;
             }
+        }
 
+        if (selectedTile != null) {
+
+            if (IsPointerOnUI())
+                return;
+            
             Ray ray = GameController.cameraController.worldCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
             if (hit.collider != null && hit.collider.GetComponent<EditableTile>()) {
                 GameObject tile = hit.collider.gameObject;
 
+                // The x and y axis of the clicked tile, in world units.
+                int tileX = (int)tile.transform.position.x;
+                int tileY = (int)tile.transform.position.y;
+                Tile newTile = EditableTiles[selectedTile.name];
+                Vector2 newTileSize = newTile.size;
+                SpriteRenderer spriteRenderer = tile.GetComponent<SpriteRenderer>();
+
                 if (leftClick) {
-                    tile.GetComponent<SpriteRenderer>().sprite = selectedTile.GetComponent<SpriteRenderer>().sprite;
+                    tile.GetComponent<EditableTile>().tile = EditableTiles[selectedTile.name];
+                    spriteRenderer.sprite = selectedTile.GetComponent<SpriteRenderer>().sprite;
                     tile.name = selectedTile.name;
+                    
+                    // Loop through the grids to see if there's any space to place the new tile.
+                    for(int i = 0; i < newTileSize.x; i++) {
+                        for (int j = 0; j < newTileSize.y; j++) {
+                            if (true) {
+
+                            }
+                        }
+                    }
+
                 } else if (rightClick) {
-                    tile.GetComponent<SpriteRenderer>().sprite = gridTile.GetComponent<SpriteRenderer>().sprite;
+                    tile.GetComponent<EditableTile>().tile = EditableTiles[gridTile.name];
+                    spriteRenderer.sprite = gridTile.GetComponent<SpriteRenderer>().sprite;
                     tile.name = gridTile.name;
+                } else if (tile.name == gridTile.name) {
+                    lastHoveredTile = tile;
+                    spriteRenderer.sprite = selectedTile.GetComponent<SpriteRenderer>().sprite;
                 }
             }
         }
@@ -210,7 +255,7 @@ public class Editor : MonoBehaviour {
     }
 
     public void BackToMenu() {
-        SaveLoad.SaveMap("test");
+        SaveLoad.SaveMap("backupMap");
         GameController.ClearMap();
 
         HideMenu();
