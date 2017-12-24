@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -67,6 +68,19 @@ public class Main : MonoBehaviour {
     //start the game
     private void StartGame() {
         string json = SaveLoad.LoadMap("level01");
+        List<FileInfo> mapList = new List<FileInfo>();
+
+        // Look through the folder and search for maps with extension OMEGALUL.
+        DirectoryInfo info = new DirectoryInfo(SaveLoad.folderName);
+        FileInfo[] fileInfo = info.GetFiles();
+        foreach (FileInfo file in fileInfo) {
+            if (file.Extension == ".OMEGALUL") {
+                print(file.Name);
+                mapList.Add(file);
+            }
+        }
+
+
         if (json == null) {
             return;
         }

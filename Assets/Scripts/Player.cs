@@ -128,6 +128,15 @@ public class Player : MonoBehaviour {
         }
     }
 
+    public void DisableMovement(float seconds) {
+
+        //if the player is not already getting knocked
+        if (knockbackTimer <= 0) {
+            //set the length of the knockback
+            knockbackTimer = seconds;
+        }
+    }
+
     //allows other classes to damage the player
     public void DamagePlayer(float value) {
         //decrease player's health

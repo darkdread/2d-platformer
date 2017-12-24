@@ -64,11 +64,12 @@ public class Game : SerializedMonoBehaviour {
         main.ShowMenu();
     }
 
-    public GameObject AddTile(string type, Vector3 position) {
+    public GameObject AddTile(string type, Vector3 position, float rotation = 0f) {
         GameObject tile = Instantiate(Resources.Load<GameObject>(string.Format("{0}/{1}", folderName, type)));
 
         tile.name = type;
         tile.transform.position = position;
+        tile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
         tile.transform.SetParent(gameHolder.transform);
         
         // Disable the tile from moving & make tile editable
@@ -167,7 +168,7 @@ public class Game : SerializedMonoBehaviour {
         GameObjectInScene[] goList = JsonHelper.FromJson<GameObjectInScene>(json);
 
         foreach(var t in goList) {
-            GameObject tile = AddTile(t.name, t.position);
+            GameObject tile = AddTile(t.name, t.position, t.rotation.eulerAngles.z);
 
             //playing the game
             if (!Main.EditorMode) {

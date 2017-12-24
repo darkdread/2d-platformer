@@ -28,6 +28,10 @@ public static class SaveLoad {
         foreach (var t in Game.tiles) {
             GameObjectInScene go = new GameObjectInScene(t.name, t.transform.localScale, t.transform.position, t.transform.rotation);
 
+            if (go.name == "BouncingPlatform") {
+                Debug.Log(go.rotation.eulerAngles);
+            }
+
             goList[index] = go;
             index++;
         }

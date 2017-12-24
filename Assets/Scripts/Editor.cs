@@ -29,6 +29,7 @@ public class Editor : MonoBehaviour {
     private static GameObject gridTile;
     private static string folderName = "Objects";
     private static GameObject lastHoveredTile;
+    private static float selectedTileRotation = 0f;
 
     //filter out things I do not want the players to touch/edit/place/whatever
     public static Dictionary<string, Tile> EditableTiles = new Dictionary<string, Tile>();
@@ -78,7 +79,7 @@ public class Editor : MonoBehaviour {
 
             //even tile
             if (tileCount % 2 == 0) {
-                position = new Vector3(28, yPos, 1);
+                position = new Vector3(27, yPos, 1);
             } else {
                 position = new Vector3(23, yPos, 1);
             }
@@ -197,8 +198,20 @@ public class Editor : MonoBehaviour {
         bool leftClick = Input.GetMouseButton(0);
         bool rightClick = Input.GetMouseButton(1);
         if (lastHoveredTile != null) {
+
+            // If mouse is hovering over a grid, we change the tile's sprite back to grid's sprite.
             if (lastHoveredTile.name == gridTile.name) {
                 lastHoveredTile.GetComponent<SpriteRenderer>().sprite = gridTile.GetComponent<SpriteRenderer>().sprite;
+                //lastHoveredTile.transform.rotation = Quaternion.Euler(lastHoveredTile.transform.eulerAngles + new Vector3(0, 0, selectedTileRotation));
+            }
+            if (Input.GetKeyDown(KeyCode.R)) {
+                // If mouse is hovering over a grid, we change the selected tile's rotation.
+                if (lastHoveredTile.name == gridTile.name) {
+                    selectedTileRotation = selectedTileRotation + 90f >= 360 ? 0f : selectedTileRotation + 90f;
+                } else {
+                    // If mouse is hovering over a tile, we change the tile's rotation.
+                    lastHoveredTile.transform.rotation = Quaternion.Euler(lastHoveredTile.transform.eulerAngles + new Vector3(0, 0, 90f));
+                }
             }
         }
 
@@ -218,14 +231,16 @@ public class Editor : MonoBehaviour {
                 Tile newTile = EditableTiles[selectedTile.name];
                 Vector2 newTileSize = newTile.size;
                 SpriteRenderer spriteRenderer = tile.GetComponent<SpriteRenderer>();
+                lastHoveredTile = tile;
 
                 if (leftClick) {
                     tile.GetComponent<EditableTile>().tile = EditableTiles[selectedTile.name];
                     spriteRenderer.sprite = selectedTile.GetComponent<SpriteRenderer>().sprite;
                     tile.name = selectedTile.name;
-                    
+                    tile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, selectedTileRotation));
+
                     // Loop through the grids to see if there's any space to place the new tile.
-                    for(int i = 0; i < newTileSize.x; i++) {
+                    for (int i = 0; i < newTileSize.x; i++) {
                         for (int j = 0; j < newTileSize.y; j++) {
                             if (true) {
 
@@ -237,9 +252,12 @@ public class Editor : MonoBehaviour {
                     tile.GetComponent<EditableTile>().tile = EditableTiles[gridTile.name];
                     spriteRenderer.sprite = gridTile.GetComponent<SpriteRenderer>().sprite;
                     tile.name = gridTile.name;
+                    tile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
                 } else if (tile.name == gridTile.name) {
-                    lastHoveredTile = tile;
+                    // If mouse is hovering over a grid, we change the tile's sprite to the selected tile's sprite.
                     spriteRenderer.sprite = selectedTile.GetComponent<SpriteRenderer>().sprite;
+                    // We also rotate the grid's rotation to the current selection rotation.
+                    tile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, selectedTileRotation));
                 }
             }
         }

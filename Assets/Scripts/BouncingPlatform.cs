@@ -79,12 +79,13 @@ public class BouncingPlatform : MonoBehaviour {
 
             //fire!
             if (activateTimer <= 0) {
-                //force value
-                Vector2 force = new Vector2(0, this.force);
 
                 //apply force to rigidbody
                 foreach (Collider2D obj in smthAbove) {
-                    obj.GetComponent<Rigidbody2D>().AddForce(force, ForceMode2D.Impulse);
+                    obj.GetComponent<Rigidbody2D>().AddForce(transform.up * force, ForceMode2D.Impulse);
+                    if (obj.GetComponent<Player>()) {
+                        obj.GetComponent<Player>().DisableMovement(0.3f);
+                    }
                 }
 
                 ResetPlatform();
@@ -97,8 +98,6 @@ public class BouncingPlatform : MonoBehaviour {
     private void ResetPlatform() {
         if (spriteRenderer.sprite == defaultState)
             return;
-
-        print("reset!");
 
         //reset the timer
         activateTimer = activationTimer;
