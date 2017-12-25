@@ -68,14 +68,18 @@ public class Editor : MonoBehaviour {
             button.name = t.name;
 
             Vector3 position;
-            float yPos = 12;
+            float yPos;
+            /*
             if (tileCount <= 2) {
                 yPos = 12;
             } else if (tileCount <= 4) {
                 yPos = 10;
             }
+            */
 
-            yPos = 12 - (((tileCount-1) / 2) * 6);
+            // tileCount starts from 1 to the amount of tile.
+
+            yPos = (float)(12 - (((tileCount-1) / 2) * 6));
 
             //even tile
             if (tileCount % 2 == 0) {
@@ -89,8 +93,13 @@ public class Editor : MonoBehaviour {
             tileCount += 1;
         }
 
+        // Set the container height to contain all the tiles
+        // 100 is the button height, 60 is for the border between each row
+        tileHolder.GetComponent<RectTransform>().sizeDelta = new Vector2(250, ((tileCount/2) * (100 + 60)));
+
         // Default selected tile.
         SelectTile(tiles[0]);
+
         saveMenuBtn.onClick.AddListener(ShowSaveMenu);
         loadMenuBtn.onClick.AddListener(ShowLoadMenu);
         saveBtn.onClick.AddListener(SaveMap);

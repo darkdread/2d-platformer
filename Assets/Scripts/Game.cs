@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
+using System;
 
 [System.Serializable]
 public class Game : SerializedMonoBehaviour {
@@ -99,6 +99,7 @@ public class Game : SerializedMonoBehaviour {
                 Destroy(child.gameObject);
             }
         }
+        Array.Clear(tiles, 0, tiles.Length);
     }
 
     private List<GameObject> GetNeighborTiles(GameObject tile) {
@@ -164,29 +165,80 @@ public class Game : SerializedMonoBehaviour {
         }
     }
 
-    public void GenerateMapFromJson(string json) {
-        GameObjectInScene[] goList = JsonHelper.FromJson<GameObjectInScene>(json);
+    //generate blank map for editor
+    public void GenerateMap() {
+        for (int x = 0; x < gridWidth; x++) {
+            for (int y = 0; y < gridHeight; y++) {
+                GameObject tile;
+                Vector3 pos = new Vector3(x, y, 0);
 
-        foreach(var t in goList) {
+                // Creating the tile
+                if (x == 0 || x == gridWidth - 1 || y == 0 || y == gridHeight - 1) {
+                    tile = AddTile("OuterWall", pos);
+                } else {
+                    tile = AddTile("Grid", pos);
+                }
+
+                tile.transform.SetParent(gameHolder.transform);
+                tiles[x, y] = tile;
+            }
+        }
+
+        cameraController.transform.position = new Vector3(30, 15, cameraController.transform.position.z);
+    }
+
+    public GameObject GetTile(int x, int y) {
+        return tiles[x, y];
+    }
+
+    public void GenerateMapFromJson(string json) {
+        GameData gameData = JsonUtility.FromJson<GameData>(json);
+        GameObjectInScene[] tileArray = new GameObjectInScene[gameData.mapWidth * gameData.mapHeight];
+        GameObjectInScene[] tileData = gameData.tiles;
+
+        // What it does
+        // ============================
+        // First, it loads the map's width and height from the Json file.
+        // Then, it will search for GameObjectInScenes stored in the Json file.
+        // Create tiles using the position, rotation, scale and name from the GameObjectInScene.
+        // After creating tiles FROM the stored data, we will then create Grids.
+        // Grids are created by searching for a tile's position. If the tile is empty, create at its position.
+
+        // Loops from y to mapHeight then x to mapWidth.
+        Vector3 tilePos = new Vector3();
+        int count = 0;
+
+        foreach(GameObjectInScene t in tileData) { 
             GameObject tile = AddTile(t.name, t.position, t.rotation.eulerAngles.z);
+            tileArray[count++] = t;
 
             //playing the game
             if (!Main.EditorMode) {
-                //CombineCollider(tile);
-
                 switch (t.name) {
                     case "Main Character":
-                    case "playerr":
                         cameraController.player = tile;
-                        break;
-                    case "Grid":
-                        // It doesn't remove the tile from the array
-                        Destroy(tile);
                         break;
                 }
             }
         }
 
+        // Creating the Grids
+        if (Main.EditorMode) {
+            for (int i = 0; i < tileArray.Length; i++) {
+                GameObject tile = GetTile((int)tilePos.x, (int)tilePos.y);
+
+                if (tile == null) {
+                    tile = AddTile("Grid", tilePos);
+                }
+
+                // Loops from y to mapHeight then x to mapWidth.
+                if (++tilePos.y >= gameData.mapHeight) {
+                    tilePos.y = 0;
+                    tilePos.x += 1;
+                }
+            }
+        }
+        
         // Combine colliders
         if (Main.EditorMode)
             return;
@@ -262,28 +314,6 @@ public class Game : SerializedMonoBehaviour {
             
             collider.SetPath(i, points);
         }
-    }
-
-    //generate blank map for editor
-    public void GenerateMap() {
-        for (int x = 0; x < gridWidth; x++) {
-            for (int y = 0; y < gridHeight; y++) {
-                GameObject tile;
-                Vector3 pos = new Vector3(x, y, 0);
-
-                // Creating the tile
-                if (x == 0 || x == gridWidth - 1 || y == 0 || y == gridHeight - 1) {
-                    tile = AddTile("OuterWall", pos);
-                } else {
-                    tile = AddTile("Grid", pos);
-                }
-
-                tile.transform.SetParent(gameHolder.transform);
-                tiles[x, y] = tile;
-            }
-        }
-
-        cameraController.transform.position = new Vector3(30, 15, cameraController.transform.position.z);
     }
 
     //this function takes a list of polygons as a parameter, this list of polygons represent all the polygons that constitute collision in your level.

@@ -56,6 +56,7 @@ public class Main : MonoBehaviour {
         if (json == null) {
             GameController.GetComponent<Game>().GenerateMap();
         } else {
+            GameController.GetComponent<Game>().ClearMap();
             GameController.GetComponent<Game>().GenerateMapFromJson(json);
         }
 

@@ -16,28 +16,49 @@ public static class SaveLoad {
 
         BinaryFormatter bf = new BinaryFormatter();
         //Application.persistentDataPath is a string, so if you wanted you can put that into debug.log if you want to know where save games are located
+
         FileStream file = File.Create(string.Format(
             "{0}/{1}.OMEGALUL",
             folderName,
             fileName
         ));
 
-        GameObjectInScene[] goList = new GameObjectInScene[Game.gridHeight * Game.gridWidth];
-        int index = 0;
+        // What it does
+        // ============================
+        // First, it takes the map's width and height and stores it into the class GameData.
+        // Then, it will search the entire map for tiles that aren't Grids. Add them into a List of type GameObjectInScene.
+        // The GameObjectInScene will store its position, rotation, name and scale.
+        // After storing them into GameData, we will serialize GameData into a Json string. Stream the Json string into a folder.
+
+        GameData gameData = new GameData() {
+            mapWidth = Game.gridWidth,
+            mapHeight = Game.gridHeight
+        };
+
+        List<GameObjectInScene> tileList = new List<GameObjectInScene>();
+
+        int count = 0, index = 0;
 
         foreach (var t in Game.tiles) {
-            GameObjectInScene go = new GameObjectInScene(t.name, t.transform.localScale, t.transform.position, t.transform.rotation);
-
-            if (go.name == "BouncingPlatform") {
-                Debug.Log(go.rotation.eulerAngles);
+            if (t.name == "Grid") {
+                continue;
             }
 
-            goList[index] = go;
+            tileList.Add(new GameObjectInScene(t.name, t.transform.localScale, t.transform.position, t.transform.rotation));
+
+            count++;
+        }
+        
+        gameData.tiles = new GameObjectInScene[count];
+
+        foreach(GameObjectInScene tile in tileList) { 
+            GameObjectInScene go = new GameObjectInScene(tile.name, tile.scale, tile.position, tile.rotation);
+            
+            gameData.tiles[index] = go;
             index++;
         }
 
-        string json = JsonHelper.ToJson(goList);
-        //Debug.Log(json);
+        string json = JsonUtility.ToJson(gameData);
 
         bf.Serialize(file, json);
         file.Close();
