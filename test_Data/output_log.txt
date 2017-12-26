@@ -23,7 +23,7 @@ Platform assembly: E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\
 Loading E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\Sirenix.Serialization.dll into Unity Child Domain
 Platform assembly: E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\Sirenix.Utilities.dll (this message is harmless)
 Loading E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\Sirenix.Utilities.dll into Unity Child Domain
-- Completed reload, in  0.105 seconds
+- Completed reload, in  0.050 seconds
 Platform assembly: E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 144Hz; virtual: 1920x1080 at 0,0

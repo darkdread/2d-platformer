@@ -51,13 +51,12 @@ public class Main : MonoBehaviour {
 
     private void EditMode() {
         editorMode = true;
-        string json = SaveLoad.LoadMap("null");
+        string fileName = "test";
 
-        if (json == null) {
+        if (fileName == null) {
             GameController.GetComponent<Game>().GenerateMap();
         } else {
-            GameController.GetComponent<Game>().ClearMap();
-            GameController.GetComponent<Game>().GenerateMapFromJson(json);
+            EditorController.GetComponent<Editor>().LoadMap(fileName);
         }
 
         HideMenu();

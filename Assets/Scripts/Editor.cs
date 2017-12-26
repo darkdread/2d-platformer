@@ -25,6 +25,8 @@ public class Editor : MonoBehaviour {
     public Button tilePrefabBtn;
     public Transform tileHolder;
 
+    public static Material LineMaterial;
+
     public static bool allowCameraMovement = true;
     private static GameObject gridTile;
     private static string folderName = "Objects";
@@ -102,8 +104,14 @@ public class Editor : MonoBehaviour {
 
         saveMenuBtn.onClick.AddListener(ShowSaveMenu);
         loadMenuBtn.onClick.AddListener(ShowLoadMenu);
-        saveBtn.onClick.AddListener(SaveMap);
-        loadBtn.onClick.AddListener(LoadMap);
+
+        saveBtn.onClick.AddListener(delegate {
+            SaveMap(saveInputField.text);
+        });
+        loadBtn.onClick.AddListener(delegate {
+            LoadMap(loadInputField.text);
+        });
+
         backBtn.onClick.AddListener(BackToMenu);
 
 
@@ -111,16 +119,14 @@ public class Editor : MonoBehaviour {
         HideMenu();
 	}
 
-    private void SaveMap() {
-        string fileName = saveInputField.text;
+    public void SaveMap(string fileName = "") {
         SaveLoad.SaveMap(fileName);
 
         allowCameraMovement = true;
         ShowSaveMenu();
     }
 
-    private void LoadMap() {
-        string fileName = loadInputField.text;
+    public void LoadMap(string fileName = "") {
         string json = SaveLoad.LoadMap(fileName);
 
         // Generate map and close menu

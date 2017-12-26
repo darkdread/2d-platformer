@@ -13,6 +13,7 @@ public class CameraController : MonoBehaviour {
     public float followAhead;
     //how long it will take for the camera to transition
     public float smoothing;
+    public Material mat;
 
     //the position to move the camera
     private Vector3 targetPosition;
@@ -26,7 +27,7 @@ public class CameraController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        targetOrtho = Camera.main.orthographicSize;
+        targetOrtho = worldCamera.orthographicSize;
     }
 	
 	// Update is called once per frame
@@ -40,7 +41,7 @@ public class CameraController : MonoBehaviour {
             }
         }
 
-        Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, targetOrtho, smoothSpeed * Time.deltaTime);
+        worldCamera.orthographicSize = Mathf.MoveTowards(worldCamera.orthographicSize, targetOrtho, smoothSpeed * Time.deltaTime);
 
         if (Main.EditorMode && Editor.allowCameraMovement) {
             float xCamera = Input.GetAxisRaw("Horizontal") * moveSpeed;

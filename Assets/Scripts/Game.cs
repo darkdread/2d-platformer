@@ -165,7 +165,10 @@ public class Game : SerializedMonoBehaviour {
         }
     }
 
-    //generate blank map for editor
+    // Generate blank map for editor.
+    // Outer Wall objects start from x, y [0, 0] to [width-1, height-1]
+    // So the contents actually start from [1, 1] to [width-2, height-2]
+
     public void GenerateMap() {
         for (int x = 0; x < gridWidth; x++) {
             for (int y = 0; y < gridHeight; y++) {
@@ -224,6 +227,8 @@ public class Game : SerializedMonoBehaviour {
 
         // Creating the Grids
         if (Main.EditorMode) {
+            // Creating the Lines
+
             for (int i = 0; i < tileArray.Length; i++) {
                 GameObject tile = GetTile((int)tilePos.x, (int)tilePos.y);
 
