@@ -51,7 +51,7 @@ public class Main : MonoBehaviour {
 
     private void EditMode() {
         editorMode = true;
-        string fileName = "test";
+        string fileName = "level01";
 
         if (fileName == null) {
             GameController.GetComponent<Game>().GenerateMap();

@@ -72,11 +72,16 @@ public class Game : SerializedMonoBehaviour {
         tile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
         tile.transform.SetParent(gameHolder.transform);
         
-        // Disable the tile from moving & make tile editable
+        // Disable the tile from moving & make tile editable.
         if (Main.EditorMode) {
             if (!Editor.FilterTile(tile.name)) {
                 EditableTile editableTile = tile.AddComponent<EditableTile>();
-                editableTile.tile = Editor.EditableTiles[tile.name];
+                string tileType = tile.GetComponent<TileType>().tile.name;
+                if (Editor.EditableTiles.ContainsKey(tileType)) {
+                    editableTile.tile = Editor.EditableTiles[tileType];
+                } else {
+                    editableTile.tile = Editor.EditableTiles[Editor.DefaultTile];
+                }
             }
             Rigidbody2D rb = tile.GetComponent<Rigidbody2D>();
             if (rb) {
@@ -270,6 +275,15 @@ public class Game : SerializedMonoBehaviour {
             PolygonCollider2D polygonCollider = tile.GetComponent<PolygonCollider2D>();
 
             if (polygonCollider) {
+
+                // If the rotation of the tile is not 0, do not combine.
+                // There is a problem with rotations and colliders. The position of the points do not change, but the bounds change.
+                // With Clipper library, it is not possible to change the bounds. The only solution is to reposition each rotated tile, but the algorithm is unclear.
+
+                if (tile.transform.rotation.eulerAngles.z != 0) {
+                    continue;
+                }
+
                 Vector2[] polyPoints = polygonCollider.points;
                 
                 for(int i = 0; i < polyPoints.Length; i++) {

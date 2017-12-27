@@ -8,7 +8,7 @@ public class GridRenderer : MonoBehaviour {
 
 
     private void OnPostRender() {
-        if (!Main.EditorMode)
+        if (!Main.EditorMode || !Editor.EnableGrid)
             return;
 
         if (!mat) {

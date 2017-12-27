@@ -16,14 +16,16 @@ public class Editor : MonoBehaviour {
     public Button backBtn;
     public Button saveMenuBtn, loadMenuBtn;
     public Button saveBtn, loadBtn;
+    public Button showTerrainBtn, showObjectBtn;
     public InputField saveInputField, loadInputField;
     public CanvasGroup saveMenu, loadMenu;
 
     //tiles in editor, not game object
     private GameObject[] tiles;
     private GameObject selectedTile;
-    public Button tilePrefabBtn;
-    public Transform tileHolder;
+    public GameObject tilePrefabBtn;
+    public Transform tileContentHolder;
+    private Dictionary<string, Transform> tileHolders = new Dictionary<string, Transform>();
 
     public static Material LineMaterial;
 
@@ -32,9 +34,12 @@ public class Editor : MonoBehaviour {
     private static string folderName = "Objects";
     private static GameObject lastHoveredTile;
     private static float selectedTileRotation = 0f;
+    public static bool EnableGrid = true;
+    public static GameObject currentTileType;
 
     //filter out things I do not want the players to touch/edit/place/whatever
     public static Dictionary<string, Tile> EditableTiles = new Dictionary<string, Tile>();
+    public static string DefaultTile = "Default";
     private static string[] filterTiles = new string[] { "OuterWall" };
 
     public static bool FilterTile(string tile) {
@@ -51,56 +56,69 @@ public class Editor : MonoBehaviour {
 	void Start () {
         tiles = Resources.LoadAll<GameObject>(string.Format("{0}/", folderName));
         gridTile = Resources.Load<GameObject>(string.Format("{0}/Grid", folderName));
-        Tile[] allTiles = Resources.LoadAll<Tile>("Objects");
-        foreach (Tile tile in allTiles) {
-            string tileName = tile.name;
-            EditableTiles.Add(tileName, tile);
+        Tile[] allTileTypes = Resources.LoadAll<Tile>("Objects/TileType");
+
+        foreach (Tile tile in allTileTypes) {
+            string tileType = tile.name;
+            EditableTiles.Add(tileType, tile);
+
+            // Create an empty game object to hold the tile types. Hide the game object.
+            GameObject tileHolder = new GameObject(tileType);
+            tileHolder.transform.SetParent(tileContentHolder);
+            tileHolder.transform.localScale = Vector3.one;
+            tileHolder.transform.localPosition = Vector3.zero;
+            tileHolder.SetActive(false);
+
+            // Add the tile type to a list 
+            tileHolders.Add(tileType, tileHolder.transform);
         }
 
-        int tileCount = 1;
+        int[] tileCount = new int[allTileTypes.Length];
+
         foreach(var t in tiles) {
             // Things I do not want players to place/edit. Grid is an exceptional case as I want them to be editable BUT not show in the menu.
             if (FilterTile(t.name) || t.name == "Grid") {
                 continue;
             }
-            Button button = Instantiate<Button>(tilePrefabBtn);
-            button.transform.SetParent(tileHolder);
-            button.GetComponent<Image>().sprite = t.GetComponent<SpriteRenderer>().sprite;
-            button.transform.localScale = Vector3.one;
+
+            // Creating the button
+            GameObject button = Instantiate<GameObject>(tilePrefabBtn);
+            Tile tile = button.AddComponent<TileType>().GetCopyOf(t.GetComponent<TileType>()).tile;
+            button.transform.SetParent(tileHolders[tile.name]);
+
+            float xPos = 0, yPos = -100;
+
+            // Compare the tile types between the one stored in allTiles and the current tile.
+            // If it is the same, perform the following calculation.
+            for (int i = 0; i < allTileTypes.Length; i++) {
+                if (allTileTypes[i] == tile) {
+                    xPos = 100 + (tileCount[i] * (100 + 30));
+                    tileCount[i] += 1;
+                    break;
+                }
+            }
+
             button.name = t.name;
-
-            Vector3 position;
-            float yPos;
-            /*
-            if (tileCount <= 2) {
-                yPos = 12;
-            } else if (tileCount <= 4) {
-                yPos = 10;
-            }
-            */
-
-            // tileCount starts from 1 to the amount of tile.
-
-            yPos = (float)(12 - (((tileCount-1) / 2) * 6));
-
-            //even tile
-            if (tileCount % 2 == 0) {
-                position = new Vector3(27, yPos, 1);
-            } else {
-                position = new Vector3(23, yPos, 1);
-            }
-
-            button.transform.position = position;
-            button.onClick.AddListener(OnClickTile);
-            tileCount += 1;
+            button.transform.localScale = Vector3.one;
+            button.GetComponent<Image>().sprite = t.GetComponent<SpriteRenderer>().sprite;
+            button.GetComponent<RectTransform>().localPosition = new Vector3(xPos, yPos, 0);
+            button.GetComponent<Button>().onClick.AddListener(OnClickTile);
         }
 
         // Set the container height to contain all the tiles
         // 100 is the button height, 60 is for the border between each row
-        tileHolder.GetComponent<RectTransform>().sizeDelta = new Vector2(250, ((tileCount/2) * (100 + 60)));
+        //tileHolder.GetComponent<RectTransform>().sizeDelta = new Vector2(250, ((tileCount/2) * (100 + 60)));
 
         // Default selected tile.
         SelectTile(tiles[0]);
+
+        showTerrainBtn.onClick.AddListener(delegate {
+            ShowTileType("Terrain");
+        });
+
+        showObjectBtn.onClick.AddListener(delegate {
+            ShowTileType("Object");
+        });
 
         saveMenuBtn.onClick.AddListener(ShowSaveMenu);
         loadMenuBtn.onClick.AddListener(ShowLoadMenu);
@@ -116,14 +134,27 @@ public class Editor : MonoBehaviour {
 
 
         // Auto hide menu on startup.
-        HideMenu();
+        //HideMenu();
 	}
+
+    public void HideTileType() {
+        if (currentTileType != null)
+            currentTileType.SetActive(false);
+    }
+
+    public void ShowTileType(string type) {
+        if (tileHolders.ContainsKey(type)) {
+            HideTileType();
+            currentTileType = tileHolders[type].gameObject;
+            currentTileType.SetActive(true);
+        }
+    }
 
     public void SaveMap(string fileName = "") {
         SaveLoad.SaveMap(fileName);
 
         allowCameraMovement = true;
-        ShowSaveMenu();
+        HideSaveMenu();
     }
 
     public void LoadMap(string fileName = "") {
@@ -133,21 +164,24 @@ public class Editor : MonoBehaviour {
         if (json != null) {
             GameController.ClearMap();
             GameController.GenerateMapFromJson(json);
-            ShowLoadMenu();
+            HideLoadMenu();
         }
 
         allowCameraMovement = true;
     }
 
     private void ShowSaveMenu() {
-        // Show save menu
         if (saveMenu.alpha == 0f) {
             saveMenu.alpha = 1f;
             saveMenu.blocksRaycasts = true;
             loadMenu.alpha = 0f;
             loadMenu.blocksRaycasts = false;
             allowCameraMovement = false;
-        } else {
+        }
+    }
+
+    private void HideSaveMenu() {
+        if (saveMenu.alpha == 1f) {
             saveMenu.alpha = 0f;
             saveMenu.blocksRaycasts = false;
             allowCameraMovement = true;
@@ -155,14 +189,17 @@ public class Editor : MonoBehaviour {
     }
 
     private void ShowLoadMenu() {
-        // Show menu
         if (loadMenu.alpha == 0f) {
             saveMenu.alpha = 0f;
             saveMenu.blocksRaycasts = false;
             loadMenu.alpha = 1f;
             loadMenu.blocksRaycasts = true;
             allowCameraMovement = false;
-        } else {
+        }
+    }
+
+    private void HideLoadMenu() {
+         if (loadMenu.alpha == 1f) {
             loadMenu.alpha = 0f;
             loadMenu.blocksRaycasts = false;
             allowCameraMovement = true;
@@ -243,13 +280,18 @@ public class Editor : MonoBehaviour {
                 // The x and y axis of the clicked tile, in world units.
                 int tileX = (int)tile.transform.position.x;
                 int tileY = (int)tile.transform.position.y;
-                Tile newTile = EditableTiles[selectedTile.name];
+
+                Tile newTile = EditableTiles[DefaultTile];
+                Tile type = selectedTile.GetComponent<TileType>().tile;
+                if (EditableTiles.ContainsKey(type.name)) {
+                    newTile = EditableTiles[type.name];
+                }
                 Vector2 newTileSize = newTile.size;
                 SpriteRenderer spriteRenderer = tile.GetComponent<SpriteRenderer>();
                 lastHoveredTile = tile;
 
                 if (leftClick) {
-                    tile.GetComponent<EditableTile>().tile = EditableTiles[selectedTile.name];
+                    tile.GetComponent<EditableTile>().tile = newTile;
                     spriteRenderer.sprite = selectedTile.GetComponent<SpriteRenderer>().sprite;
                     tile.name = selectedTile.name;
                     tile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, selectedTileRotation));
@@ -262,7 +304,6 @@ public class Editor : MonoBehaviour {
                             }
                         }
                     }
-
                 } else if (rightClick) {
                     tile.GetComponent<EditableTile>().tile = EditableTiles[gridTile.name];
                     spriteRenderer.sprite = gridTile.GetComponent<SpriteRenderer>().sprite;
