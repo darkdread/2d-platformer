@@ -15,6 +15,7 @@ public class Game : SerializedMonoBehaviour {
     public Main main;
     public MyDictionary myDictionary;
     public Dictionary<string, GameObject> TileDictionary;
+    public Dictionary<string, GameObject> ProjectileDictionary;
 
     //size is +2 because of outer walls [left/right, top/btm]
     public static int gridWidth = 128+2;
@@ -49,6 +50,7 @@ public class Game : SerializedMonoBehaviour {
     // Use this for initialization
     void Start () {
         TileDictionary = myDictionary.TileDictionary;
+        ProjectileDictionary = myDictionary.ProjectileDictionary;
         tiles = new GameObject[gridWidth, gridHeight];
     }
 	

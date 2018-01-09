@@ -7,6 +7,7 @@ public class MyDictionary : SerializedMonoBehaviour {
 
     [SerializeField]
     public Dictionary<string, GameObject> TileDictionary;
+    public Dictionary<string, GameObject> ProjectileDictionary;
 
     // Use this for initialization
     void Start () {

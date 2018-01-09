@@ -17,6 +17,7 @@ public class Editor : MonoBehaviour {
     public Button saveMenuBtn, loadMenuBtn;
     public Button saveBtn, loadBtn;
     public Button showTerrainBtn, showObjectBtn;
+    public Button tileMenuBtn;
     public InputField saveInputField, loadInputField;
     public CanvasGroup saveMenu, loadMenu;
 
@@ -25,6 +26,7 @@ public class Editor : MonoBehaviour {
     private GameObject selectedTile;
     public GameObject tilePrefabBtn;
     public Transform tileContentHolder;
+    public GameObject tileMenu;
     private Dictionary<string, Transform> tileHolders = new Dictionary<string, Transform>();
 
     public static Material LineMaterial;
@@ -130,6 +132,13 @@ public class Editor : MonoBehaviour {
             LoadMap(loadInputField.text);
         });
 
+        tileMenuBtn.onClick.AddListener(delegate {
+            if (tileMenu.activeSelf) {
+                HideTileMenu();
+            } else {
+                ShowTileMenu();
+            }
+        });
         backBtn.onClick.AddListener(BackToMenu);
 
 
@@ -148,6 +157,13 @@ public class Editor : MonoBehaviour {
             currentTileType = tileHolders[type].gameObject;
             currentTileType.SetActive(true);
         }
+    }
+
+    public void HideTileMenu() {
+        tileMenu.SetActive(false);
+    }
+    public void ShowTileMenu() {
+        tileMenu.SetActive(true);
     }
 
     public void SaveMap(string fileName = "") {
