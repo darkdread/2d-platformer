@@ -58,12 +58,15 @@ public class Player : MonoBehaviour {
         foreach (LayerMask mask in realGround) {
             Collider2D[] result = Physics2D.OverlapCircleAll(groundCheck.position, groundCheckRadius, mask);
             
-            // Make sure we aren't checking for the player itself
             foreach(Collider2D collider in result) {
+                // Make sure we aren't checking for the player itself
+                print(collider.gameObject.name);
                 if (collider.gameObject.GetInstanceID() != this.gameObject.GetInstanceID()) {
                     isGrounded = true;
+                    print("ZULUL");
                     goto End;
                 } else {
+                    print("WutFace");
                     isGrounded = false;
                 }
             }
@@ -105,7 +108,7 @@ public class Player : MonoBehaviour {
         }
 
         //setting variables for animator so the animator knows what state to animate
-        //myAnim.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
+        myAnim.SetFloat("speed", Mathf.Abs(rb.velocity.x));
         //myAnim.SetBool("Ground", isGrounded);
     }
 
