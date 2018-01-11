@@ -9,15 +9,22 @@ public class Enemy : MonoBehaviour {
 
     private Rigidbody2D rb;
     private Animator anim;
+    private float health;
 
 	// Use this for initialization
 	void Start () {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+
+        health = enemyData.health;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        if (Main.EditorMode) {
+            return;
+        }
+
         bool isGrounded = false;
         // Check if the enemy is on the ground.
         foreach (LayerMask mask in enemyData.realGround) {
@@ -36,12 +43,23 @@ public class Enemy : MonoBehaviour {
         End:;
 
         float moveLeft = (transform.localScale.x < 0) ? -1 : 1;
+        
         rb.velocity = new Vector2(enemyData.moveSpeed * moveLeft, rb.velocity.y);
-        transform.localScale = new Vector3(moveLeft, transform.localScale.y, transform.localScale.z);
 
         if (!isGrounded) {
-            print("test");
+            // If enemy is not grounded, flip its scale and position it in a way so that on the next frame, the enemy
+            // will be back on the ground. (In this case, it iss 0.05 world units.)
+
             transform.localScale = new Vector3(moveLeft * -1, transform.localScale.y, transform.localScale.z);
+            transform.position = new Vector2(transform.position.x + (0.05f *(moveLeft * -1)), transform.position.y);
         }
 	}
+
+    public void TakeDamage(float damage) {
+        health -= damage;
+
+        if (health <= 0) {
+            Destroy(gameObject);
+        }
+    }
 }

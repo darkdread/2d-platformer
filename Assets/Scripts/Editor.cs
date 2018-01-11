@@ -56,7 +56,7 @@ public class Editor : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        tiles = Resources.LoadAll<GameObject>(string.Format("{0}/", folderName));
+        tiles = Resources.LoadAll<GameObject>(string.Format("{0}", folderName));
         gridTile = Resources.Load<GameObject>(string.Format("{0}/Grid", folderName));
         Tile[] allTileTypes = Resources.LoadAll<Tile>("Objects/TileType");
 
@@ -94,7 +94,7 @@ public class Editor : MonoBehaviour {
             // If it is the same, perform the following calculation.
             for (int i = 0; i < allTileTypes.Length; i++) {
                 if (allTileTypes[i] == tile) {
-                    xPos = 100 + (tileCount[i] * (100 + 30));
+                    xPos = 200 + (tileCount[i] * (100 + 30));
                     tileCount[i] += 1;
                     break;
                 }
