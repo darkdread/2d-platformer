@@ -13,6 +13,7 @@ public class Game : SerializedMonoBehaviour {
 
     public static Game current;
     public Main main;
+    public LevelController levelController;
     public MyDictionary myDictionary;
     public Dictionary<string, GameObject> TileDictionary;
     public Dictionary<string, GameObject> ProjectileDictionary;
@@ -27,7 +28,7 @@ public class Game : SerializedMonoBehaviour {
     private bool combined;
     public static GameObject[,] tiles;
     
-    private static string folderName = "Objects";
+    private static string folderName = "Tiles";
     private static int[,] NEIGHBOURS = {
     {-1, -1}, {0, -1}, {+1, -1},
     {-1, 0},           {+1, 0},
