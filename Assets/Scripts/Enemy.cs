@@ -51,7 +51,7 @@ public class Enemy : MonoBehaviour {
             // will be back on the ground. (In this case, it iss 0.05 world units.)
 
             transform.localScale = new Vector3(moveLeft * -1, transform.localScale.y, transform.localScale.z);
-            transform.position = new Vector2(transform.position.x + (0.05f *(moveLeft * -1)), transform.position.y);
+            transform.position = new Vector2(transform.position.x + (enemyData.moveSpeed *(moveLeft * -1) * Time.deltaTime*2), transform.position.y);
         }
 	}
 
