@@ -32,8 +32,8 @@ public class Editor : MonoBehaviour {
     public static Material LineMaterial;
 
     public static bool allowCameraMovement = true;
+    private static string folderName = "Tiles";
     private static GameObject gridTile;
-    private static string folderName = "Objects";
     private static GameObject lastHoveredTile;
     private static float selectedTileRotation = 0f;
     public static bool EnableGrid = true;
@@ -56,10 +56,9 @@ public class Editor : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        tiles = Resources.LoadAll<GameObject>(string.Format("{0}/", folderName));
+        tiles = Resources.LoadAll<GameObject>(string.Format("{0}", folderName));
         gridTile = Resources.Load<GameObject>(string.Format("{0}/Grid", folderName));
-        Tile[] allTileTypes = Resources.LoadAll<Tile>("Objects/TileType");
-
+        Tile[] allTileTypes = Resources.LoadAll<Tile>(string.Format("{0}/TileType", folderName));
         foreach (Tile tile in allTileTypes) {
             string tileType = tile.name;
             EditableTiles.Add(tileType, tile);
@@ -94,7 +93,7 @@ public class Editor : MonoBehaviour {
             // If it is the same, perform the following calculation.
             for (int i = 0; i < allTileTypes.Length; i++) {
                 if (allTileTypes[i] == tile) {
-                    xPos = 100 + (tileCount[i] * (100 + 30));
+                    xPos = 200 + (tileCount[i] * (100 + 30));
                     tileCount[i] += 1;
                     break;
                 }

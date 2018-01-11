@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class Player : MonoBehaviour {
     private const float defaultJumpSpeed = 8f;
     private Game gameController;
+    private LevelController levelController;
 
     //the movement speed of the player
     public float moveSpeed;
@@ -46,6 +47,7 @@ public class Player : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
         myAnim = GetComponent<Animator>();
         gameController = FindObjectOfType<Game>();
+        levelController = FindObjectOfType<LevelController>();
 
         //player's initial health
         health = maxHealth;
@@ -108,11 +110,9 @@ public class Player : MonoBehaviour {
             // If the player throws a projectile
             if (Input.GetKeyDown(KeyCode.C)) {
                 Vector3 projectilePos = playerFront.position;
-                GameObject projectile = Instantiate<GameObject>(gameController.ProjectileDictionary["shuriken"], projectilePos, Quaternion.identity);
-                Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
-                float force = projectile.GetComponent<Projectile>().projectileData.force;
-                Vector2 forceVec = (transform.localScale.x >= 1) ? transform.right * force : transform.right * -force;
-                projectileRb.AddForce(forceVec, ForceMode2D.Impulse);
+
+                GameObject projectile = levelController.CreateProjectileTowardsDirection(gameController.ProjectileDictionary["shuriken"], projectilePos, projectilePos + transform.localScale.x * Vector3.right * 2);
+                projectile.transform.parent = gameController.gameHolder.transform;
             }
         } else if (knockbackTimer > 0) {
             //if the player is getting knockedbacked, decrease the timer
