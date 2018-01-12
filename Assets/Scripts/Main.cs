@@ -8,8 +8,10 @@ public class Main : MonoBehaviour {
 
     public CameraController cameraController;
     public Game GameController;
+    public Scroller scroller;
     public Editor EditorController;
 
+    public GameObject[] backgrounds;
     public CanvasGroup mainMenu;
     public Button playBtn;
     public Button editBtn;
@@ -30,10 +32,24 @@ public class Main : MonoBehaviour {
         editBtn.onClick.AddListener(EditMode);
         settingsBtn.onClick.AddListener(GoToSettings);
         exitBtn.onClick.AddListener(ExitToDesktop);
+
+        ShowMenu();
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    public void HideBackground() {
+        foreach (GameObject background in backgrounds) {
+            background.SetActive(false);
+        }
+    }
+
+    public void ShowBackground() {
+        foreach (GameObject background in backgrounds) {
+            background.SetActive(true);
+        }
+    }
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
 
@@ -47,6 +63,7 @@ public class Main : MonoBehaviour {
         editorMode = false;
 
         mainMenu.gameObject.SetActive(true);
+        HideBackground();
     }
 
     private void EditMode() {
@@ -86,9 +103,11 @@ public class Main : MonoBehaviour {
         }
 
         HideMenu();
+        ShowBackground();
         
         cameraController.targetOrtho = 5f;
         GameController.GetComponent<Game>().GenerateMapFromJson(json);
+        Scroller.SetPlayerTransform(FindObjectOfType<Player>().transform);
     }
 
     void GoToSettings() {

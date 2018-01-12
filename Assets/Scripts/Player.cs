@@ -70,11 +70,11 @@ public class Player : MonoBehaviour {
                 if (collider.gameObject.GetInstanceID() != this.gameObject.GetInstanceID()) {
                     isGrounded = true;
                     goto End;
-                } else {
-                    isGrounded = false;
                 }
             }
         }
+        isGrounded = false;
+
         End:;
 
         //round the player's y axis
@@ -110,7 +110,6 @@ public class Player : MonoBehaviour {
             // If the player throws a projectile
             if (Input.GetKeyDown(KeyCode.C)) {
                 Vector3 projectilePos = playerFront.position;
-
                 GameObject projectile = levelController.CreateProjectileTowardsDirection(gameController.ProjectileDictionary["shuriken"], projectilePos, projectilePos + transform.localScale.x * Vector3.right * 2);
                 projectile.transform.parent = gameController.gameHolder.transform;
             }

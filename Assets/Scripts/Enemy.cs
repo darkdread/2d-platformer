@@ -10,17 +10,22 @@ public class Enemy : MonoBehaviour {
     private Rigidbody2D rb;
     private Animator anim;
     private float health;
+    private float movementTimer;
+    private float movementCheckDelayTimer = 1f;
+    private float lastEnemyX;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
 
         health = enemyData.health;
+        movementTimer = movementCheckDelayTimer;
+        lastEnemyX = transform.position.x;
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
         if (Main.EditorMode) {
             return;
         }
@@ -41,19 +46,28 @@ public class Enemy : MonoBehaviour {
             }
         }
         End:;
-
+        
         float moveLeft = (transform.localScale.x < 0) ? -1 : 1;
         
         rb.velocity = new Vector2(enemyData.moveSpeed * moveLeft, rb.velocity.y);
+        movementTimer -= Time.deltaTime;
 
-        if (!isGrounded) {
+        //print(string.Format("curPos: {0}, lastPos: {1}", transform.position.x, lastEnemyX));
+        //print(transform.position.x == lastEnemyX);
+
+        if (!isGrounded && movementTimer <= 0) {
             // If enemy is not grounded, flip its scale and position it in a way so that on the next frame, the enemy
-            // will be back on the ground. (In this case, it iss 0.05 world units.)
+            // will be back on the ground. (In this case, it is 0.05 world units.)
+            movementTimer = movementCheckDelayTimer;
 
             transform.localScale = new Vector3(moveLeft * -1, transform.localScale.y, transform.localScale.z);
             transform.position = new Vector2(transform.position.x + (enemyData.moveSpeed *(moveLeft * -1) * Time.deltaTime*2), transform.position.y);
+        } else if (isGrounded && movementTimer <= 0 && lastEnemyX == transform.position.x) {
+            movementTimer = movementCheckDelayTimer;
+
+            transform.localScale = new Vector3(moveLeft * -1, transform.localScale.y, transform.localScale.z);
         }
-	}
+    }
 
     public void TakeDamage(float damage) {
         health -= damage;

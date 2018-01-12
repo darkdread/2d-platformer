@@ -54,7 +54,7 @@ public class CameraController : MonoBehaviour {
         //if the player is facing right, move the camera to the right. Vice-versa
         float facingRight = (player.transform.localScale.x > 0) ? followAhead : -followAhead;
         //if the player is on the ground, set the camera y position to 0. Or else, follow the player
-        float yPos = player.transform.position.y;// > 0.1? player.transform.position.y: 0;
+        float yPos = player.transform.position.y + 2;// > 0.1? player.transform.position.y: 0;
 
         //the position to move the camera
         targetPosition = new Vector3(player.transform.position.x + facingRight, yPos, transform.position.z);
