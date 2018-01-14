@@ -6,5 +6,6 @@ using UnityEngine;
 public class ProjectileObject : ScriptableObject {
 
     public float force;
+    public float knockbackForce;
     public float damage;
 }

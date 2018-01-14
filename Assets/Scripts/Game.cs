@@ -50,6 +50,7 @@ public class Game : SerializedMonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        current = this;
         TileDictionary = myDictionary.TileDictionary;
         ProjectileDictionary = myDictionary.ProjectileDictionary;
         tiles = new GameObject[gridWidth, gridHeight];

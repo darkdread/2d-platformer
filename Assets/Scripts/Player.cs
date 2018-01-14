@@ -37,6 +37,9 @@ public class Player : MonoBehaviour {
 
     //to animate the player
     private Animator myAnim;
+
+    private SpriteRenderer spriteRenderer;
+
     //to apply physics for the player
     public Rigidbody2D rb;
 
@@ -44,6 +47,7 @@ public class Player : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         myAnim = GetComponent<Animator>();
         gameController = FindObjectOfType<Game>();
@@ -85,6 +89,11 @@ public class Player : MonoBehaviour {
 
         //if the player isn't getting knocked backed
         if (knockbackTimer <= 0) {
+
+            if (spriteRenderer.color == Color.red) {
+                spriteRenderer.color = Color.white;
+            }
+
             //if the player is moving left/right
             if (x != 0) {
                 //if the player is moving to the right, set the movement speed to positive. Vice-versa.
@@ -110,7 +119,8 @@ public class Player : MonoBehaviour {
             // If the player throws a projectile
             if (Input.GetKeyDown(KeyCode.C)) {
                 Vector3 projectilePos = playerFront.position;
-                GameObject projectile = levelController.CreateProjectileTowardsDirection(gameController.ProjectileDictionary["shuriken"], projectilePos, projectilePos + transform.localScale.x * Vector3.right * 2);
+                Projectile projectile = LevelController.CreateProjectileTowardsDirection(gameController.ProjectileDictionary["shuriken"], projectilePos, projectilePos + transform.localScale.x * Vector3.right * 2);
+                LevelController.SetProjectileEnemyTowards(projectile, "Enemy");
                 projectile.transform.parent = gameController.gameHolder.transform;
             }
         } else if (knockbackTimer > 0) {
@@ -128,17 +138,16 @@ public class Player : MonoBehaviour {
         rb.velocity = new Vector2(rb.velocity.x, speed);
     }
 
-    //allows other classes to make the player get knockedbacked
-    public void Knockback() {
+    // Allows other classes to knockback the player
+    public void Knockback(Vector2 force) {
 
-        //if the player is not already getting knocked
+        // if the enemy is not already getting knocked
         if (knockbackTimer <= 0) {
             //set the length of the knockback
             knockbackTimer = knockbackLength;
 
-            //set the force, if the player is facing right, knock him to the left. Vice-versa
-            float _knockbackForce = transform.localScale.x > 0 ? -knockbackForce : knockbackForce;
-            rb.velocity = new Vector2(_knockbackForce, Mathf.Abs(_knockbackForce));
+            spriteRenderer.color = Color.red;
+            rb.velocity = force;
         }
     }
 
@@ -152,22 +161,10 @@ public class Player : MonoBehaviour {
     }
 
     //allows other classes to damage the player
-    public void DamagePlayer(float value) {
+    public void TakeDamage(float value) {
         //decrease player's health
         health -= value;
-    }
 
-    private void OnTriggerEnter2D(Collider2D collision) {
-        //if the collided object is a kill plane
-        /*if (collision.name == "KillPlane") {
-            //damage the player (instantly kills her)
-            this.DamagePlayer(this.health);
-        }
-        //if the collided object is a checkpoint (Flag)
-        else if (collision.CompareTag("Checkpoint")) {
-            //set the respawn position to the flag the player collided with
-            respawnPosition = collision.transform.position;
-        }*/
-
+        LevelController.FlashScreen();
     }
 }
