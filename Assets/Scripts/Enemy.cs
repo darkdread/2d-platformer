@@ -29,7 +29,7 @@ public class Enemy : MonoBehaviour {
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         health = enemyData.health;
-        attackTimer = enemyData.attackDelay;
+        attackTimer = Random.Range(enemyData.attackDelayMin, enemyData.attackDelayMax);
         movementTimer = movementCheckDelayTimer;
         lastEnemyX = transform.position.x;
 	}
@@ -55,17 +55,15 @@ public class Enemy : MonoBehaviour {
         }
         End:;
 
-        // Size of the box is split in half, as the box is positioned in the enemy.
-        // So to check for the player from 5 world units distance away, the box is 5 x 2 + 2 units big.
-        // Why +2? Because the +2 is from the enemy itself. The enemy takes a world unit size, and therefore 1 x 2 = 2.
-        // If we want to check 5 world units away, we need to create a box that is twice the size (Left & Right) + 2 (to account for the enemy size).
+        // Size of the box is split in half, as the box is positioned on the enemy.
+        // So to check for the player from 5 world units distance away, the box is 5 x 2 units big.
 
-        Vector2 size = new Vector2(5 * 2 + 1 * 2, 1);
+        Vector2 size = new Vector2(10, 2);
         bool isPlayerNear = IsPlayerInBox(size);
         if (isPlayerNear && attackTimer <= 0) {
             Projectile projectile = LevelController.CreateProjectileTowardsDirection(Game.current.ProjectileDictionary["shuriken"], transform.position + transform.localScale.x * Vector3.right * 0.5f, transform.position + transform.localScale.x * Vector3.right * 2);
             LevelController.SetProjectileEnemyTowards(projectile, "Player");
-            attackTimer = enemyData.attackDelay;
+            attackTimer = Random.Range(enemyData.attackDelayMin, enemyData.attackDelayMax);
         }
 
         if (knockbackTimer <= 0) {
@@ -111,8 +109,8 @@ public class Enemy : MonoBehaviour {
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;
-        //Use the same vars you use to draw your Overlap SPhere to draw your Wire Sphere.
-        Gizmos.DrawCube(transform.position, new Vector3(10, 1, 1));
+        
+        Gizmos.DrawCube(transform.position, new Vector3(10, 2, 1));
     }
 
     // Detect if a player is in box of size XY

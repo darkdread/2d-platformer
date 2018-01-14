@@ -33,7 +33,6 @@ public class Projectile : MonoBehaviour {
     public void AddEnemyTag(string tag) {
         if (!enemyList.Contains(tag)) {
             enemyList.Add(tag);
-            print("added" + tag);
         }
     }
 
