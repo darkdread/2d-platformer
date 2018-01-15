@@ -5,6 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour {
 
     public ProjectileObject projectileData;
+    public static List<GameObject> list = new List<GameObject>();
     private List<string> enemyList = new List<string>();
 
     private Rigidbody2D rb;
@@ -14,9 +15,13 @@ public class Projectile : MonoBehaviour {
     private void Start() {
         rb = GetComponent<Rigidbody2D>();
         despawnTimer = 3;
+
+        list.Add(gameObject);
     }
 
     private void Update() {
+        if (Game.paused) return;
+
         despawnTimer -= Time.deltaTime;
 
         // Future rotation code
@@ -36,7 +41,17 @@ public class Projectile : MonoBehaviour {
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collision) {
+    public void RemoveEnemyTag(string tag) {
+        if (enemyList.Contains(tag)) {
+            enemyList.Remove(tag);
+        }
+    }
+
+    private void OnDestroy() {
+        list.Remove(gameObject);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision) {
         if (collided) {
             return;
         }

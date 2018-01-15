@@ -7,12 +7,20 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class Game : SerializedMonoBehaviour {
 
     public static Game current;
+    public static bool paused;
+    public static bool started;
+
     public Main main;
+
+    public CanvasGroup pauseMenuGroup;
+    public Button returnToMainMenu;
+
     public LevelController levelController;
     public MyDictionary myDictionary;
     public Dictionary<string, GameObject> TileDictionary;
@@ -27,7 +35,7 @@ public class Game : SerializedMonoBehaviour {
 
     private bool combined;
     public static GameObject[,] tiles;
-    
+
     private static string folderName = "Tiles";
     private static int[,] NEIGHBOURS = {
     {-1, -1}, {0, -1}, {+1, -1},
@@ -54,17 +62,65 @@ public class Game : SerializedMonoBehaviour {
         TileDictionary = myDictionary.TileDictionary;
         ProjectileDictionary = myDictionary.ProjectileDictionary;
         tiles = new GameObject[gridWidth, gridHeight];
+        returnToMainMenu.onClick.AddListener(BackToMenu);
     }
 	
 	// Update is called once per frame
 	void Update () {
-		if (!Main.EditorMode && Input.GetKeyDown(KeyCode.Escape)) {
-            BackToMenu();
+		if (Input.GetKeyDown(KeyCode.Escape) && started) {
+            if (pauseMenuGroup.gameObject.activeSelf) {
+                HidePauseMenu();
+            } else {
+                ShowPauseMenu();
+            }
         }
 	}
 
+    private void ShowPauseMenu() {
+        paused = true;
+        pauseMenuGroup.gameObject.SetActive(true);
+
+        foreach (GameObject enemy in Enemy.list) {
+            Rigidbody2D rb = enemy.GetComponent<Rigidbody2D>();
+            if (rb) {
+                PausableRigidbody2D.PauseRigidbody(rb);
+            }
+        }
+
+        foreach (GameObject projectile in Projectile.list) {
+            Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
+            if (rb) {
+                PausableRigidbody2D.PauseRigidbody(rb);
+            }
+        }
+
+        PausableRigidbody2D.PauseRigidbody(player.GetComponent<Rigidbody2D>());
+    }
+
+    private void HidePauseMenu() {
+        paused = false;
+        pauseMenuGroup.gameObject.SetActive(false);
+
+        foreach (GameObject enemy in Enemy.list) {
+            Rigidbody2D rb = enemy.GetComponent<Rigidbody2D>();
+            if (rb) {
+                PausableRigidbody2D.ResumeRigidbody(rb);
+            }
+        }
+
+        foreach (GameObject projectile in Projectile.list) {
+            Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
+            if (rb) {
+                PausableRigidbody2D.ResumeRigidbody(rb);
+            }
+        }
+
+        PausableRigidbody2D.ResumeRigidbody(player.GetComponent<Rigidbody2D>());
+    }
+
     private void BackToMenu() {
         ClearMap();
+        HidePauseMenu();
         main.ShowMenu();
     }
 
@@ -75,6 +131,10 @@ public class Game : SerializedMonoBehaviour {
         tile.transform.position = position;
         tile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
         tile.transform.SetParent(gameHolder.transform);
+
+        if (tile.GetComponent<Player>()) {
+            player = tile;
+        }
         
         // Disable the tile from moving & make tile editable.
         if (Main.EditorMode) {
@@ -102,6 +162,7 @@ public class Game : SerializedMonoBehaviour {
         foreach(var t in tiles) {
             Destroy(t.gameObject);
         }*/
+        started = false;
 
         foreach(Transform child in gameHolder.transform) {
             if (child) {
@@ -199,6 +260,16 @@ public class Game : SerializedMonoBehaviour {
         cameraController.transform.position = new Vector3(30, 15, cameraController.transform.position.z);
     }
 
+    public void PauseGame() {
+        //Time.timeScale = 0;
+        paused = true;
+    }
+
+    public void ResumeGame() {
+        //Time.timeScale = 1;
+        paused = false;
+    }
+
     public GameObject GetTile(int x, int y) {
         return tiles[x, y];
     }
@@ -252,10 +323,13 @@ public class Game : SerializedMonoBehaviour {
                 }
             }
         }
-        
-        // Combine colliders
-        if (Main.EditorMode)
+
+        if (Main.EditorMode) {
             return;
+        } else {
+            // Game started
+            started = true;
+        }
 
         // How it works
         // --------------------------

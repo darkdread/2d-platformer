@@ -61,7 +61,7 @@ public class Player : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (Main.EditorMode) return;
+        if (Main.EditorMode || Game.paused) return;
         //get player's input on the horizontal axis.
         var x = Input.GetAxisRaw("Horizontal");
 
@@ -120,7 +120,7 @@ public class Player : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.C)) {
                 Vector3 projectilePos = playerFront.position;
                 Projectile projectile = LevelController.CreateProjectileTowardsDirection(gameController.ProjectileDictionary["shuriken"], projectilePos, projectilePos + transform.localScale.x * Vector3.right * 2);
-                LevelController.SetProjectileEnemyTowards(projectile, "Enemy");
+                LevelController.SetProjectileEnemyAgainst(projectile, "Enemy");
                 projectile.transform.parent = gameController.gameHolder.transform;
             }
         } else if (knockbackTimer > 0) {

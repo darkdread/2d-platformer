@@ -1,19 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelController : MonoBehaviour {
 
     public static LevelController current;
-    private List<GameObject> projectileList = new List<GameObject>();
     public static Canvas userInterface;
     public static CanvasGroup userInterfaceGroup;
+    public static CanvasGroup onPlayerHitCanvasGroup;
+    public static Image dialogueImage;
+    public static Text dialogueText;
+
+    
+    private List<GameObject> projectileList = new List<GameObject>();
 
     private void Awake() {
         current = this;
 
         userInterface = GameObject.Find("User Interface").GetComponent<Canvas>();
         userInterfaceGroup = userInterface.GetComponent<CanvasGroup>();
+        onPlayerHitCanvasGroup = GameObject.Find("On Player Hit").GetComponent<CanvasGroup>();
+        dialogueImage = GameObject.Find("Dialogue Box").GetComponent<Image>();
+        dialogueText = dialogueImage.GetComponentInChildren<Text>();
+
+        dialogueImage.gameObject.SetActive(false);
     }
 
     public static Projectile CreateProjectileTowardsDirection(GameObject type, Vector3 position, Vector3 targetPosition) {
@@ -27,19 +38,34 @@ public class LevelController : MonoBehaviour {
 
         projectile.transform.localScale = new Vector3(direction.x, 1, 1);
         projectileRb.AddForce(direction * force, ForceMode2D.Impulse);
-        //projectileList.Add(projectile);
 
         return projectileComp;
     }
 
-    public static void SetProjectileEnemyTowards(Projectile projectile, string tag) {
+    public static void SetProjectileEnemyAgainst(Projectile projectile, string tag) {
         projectile.AddEnemyTag(tag);
     }
 
-    public static void FlashScreen() {
-        userInterfaceGroup.alpha = 1;
+    public static void RemoveProjectileEnemyAgainst(Projectile projectile, string tag) {
+        projectile.RemoveEnemyTag(tag);
+    }
 
-        current.StartCoroutine(StartFade(userInterfaceGroup, 1));
+    public static void ShowDialogue() {
+        dialogueImage.gameObject.SetActive(true);
+    }
+
+    public static void SetDialogueText(string text) {
+        dialogueText.text = text;
+    }
+
+    public static void HideDialogue() {
+        dialogueImage.gameObject.SetActive(false);
+    }
+
+    public static void FlashScreen() {
+        onPlayerHitCanvasGroup.alpha = 1;
+
+        current.StartCoroutine(StartFade(onPlayerHitCanvasGroup, 1));
     }
 
     static IEnumerator StartFade(CanvasGroup cg, float time) {

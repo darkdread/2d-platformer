@@ -80,4 +80,38 @@ public static class SaveLoad {
         }
         return null;
     }
+
+    public static void SaveProgress(string fileName) {
+        BinaryFormatter bf = new BinaryFormatter();
+
+        FileStream file = File.Create(string.Format(
+            "{0}/{1}.4HEad",
+            folderName,
+            fileName
+        ));
+
+        Progress progress = new Progress(1);
+
+        string json = JsonUtility.ToJson(progress);
+
+        bf.Serialize(file, json);
+        file.Close();
+    }
+
+    public static string LoadProgress(string fileName) {
+        string filePath = string.Format(
+            "{0}/{1}.4HEad",
+            folderName,
+            fileName
+            );
+        if (File.Exists(filePath)) {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(filePath, FileMode.Open);
+            string json = (string)bf.Deserialize(file);
+            file.Close();
+
+            return json;
+        }
+        return null;
+    }
 }

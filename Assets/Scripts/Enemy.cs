@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour {
 
+    public static List<GameObject> list = new List<GameObject>();
     public EnemyObject enemyData;
     public Transform groundCheckLeft, groundCheckRight;
 
@@ -32,11 +33,13 @@ public class Enemy : MonoBehaviour {
         attackTimer = Random.Range(enemyData.attackDelayMin, enemyData.attackDelayMax);
         movementTimer = movementCheckDelayTimer;
         lastEnemyX = transform.position.x;
+
+        list.Add(gameObject);
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        if (Main.EditorMode) {
+        if (Main.EditorMode || Game.paused) {
             return;
         }
 
@@ -62,7 +65,7 @@ public class Enemy : MonoBehaviour {
         bool isPlayerNear = IsPlayerInBox(size);
         if (isPlayerNear && attackTimer <= 0) {
             Projectile projectile = LevelController.CreateProjectileTowardsDirection(Game.current.ProjectileDictionary["shuriken"], transform.position + transform.localScale.x * Vector3.right * 0.5f, transform.position + transform.localScale.x * Vector3.right * 2);
-            LevelController.SetProjectileEnemyTowards(projectile, "Player");
+            LevelController.SetProjectileEnemyAgainst(projectile, "Player");
             attackTimer = Random.Range(enemyData.attackDelayMin, enemyData.attackDelayMax);
         }
 
@@ -136,6 +139,10 @@ public class Enemy : MonoBehaviour {
             spriteRenderer.color = Color.red;
             rb.velocity = force;
         }
+    }
+
+    private void OnDestroy() {
+        list.Remove(gameObject);
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
