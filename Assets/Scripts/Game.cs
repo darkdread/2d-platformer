@@ -123,6 +123,7 @@ public class Game : SerializedMonoBehaviour {
     private void BackToMenu() {
         ClearMap();
         HidePauseMenu();
+        LevelController.HideDialogue();
         main.ShowMenu();
     }
 

@@ -13,13 +13,12 @@ public class LevelController : MonoBehaviour {
 
     public static bool isDialogueOpen;
     public static Image dialogueImage;
-
     
     private List<GameObject> projectileList = new List<GameObject>();
 
     private void Awake() {
         current = this;
-
+        
         userInterface = GameObject.Find("User Interface").GetComponent<Canvas>();
         userInterfaceGroup = userInterface.GetComponent<CanvasGroup>();
         onPlayerHitCanvasGroup = GameObject.Find("On Player Hit").GetComponent<CanvasGroup>();
@@ -29,10 +28,9 @@ public class LevelController : MonoBehaviour {
     }
 
     private void Update() {
-        if (isDialogueOpen) {
-            if (Input.GetKeyDown(KeyCode.C)) {
+        // Dialogue Controller
+        if (!isDialogueOpen) {
 
-            }
         }
     }
 

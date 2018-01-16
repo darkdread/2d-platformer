@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour {
     private float knockbackTimer;
 
     // Use this for initialization
-    void Start () {
+    private void Start () {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -38,7 +38,7 @@ public class Enemy : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	private void Update () {
         if (Main.EditorMode || Game.paused) {
             return;
         }
@@ -64,9 +64,7 @@ public class Enemy : MonoBehaviour {
         Vector2 size = new Vector2(10, 2);
         bool isPlayerNear = IsPlayerInBox(size);
         if (isPlayerNear && attackTimer <= 0) {
-            Projectile projectile = LevelController.CreateProjectileTowardsDirection(Game.current.ProjectileDictionary["shuriken"], transform.position + transform.localScale.x * Vector3.right * 0.5f, transform.position + transform.localScale.x * Vector3.right * 2);
-            LevelController.SetProjectileEnemyAgainst(projectile, "Player");
-            attackTimer = Random.Range(enemyData.attackDelayMin, enemyData.attackDelayMax);
+            
         }
 
         if (knockbackTimer <= 0) {
@@ -82,6 +80,12 @@ public class Enemy : MonoBehaviour {
                 Transform player = FindObjectOfType<Player>().transform;
                 float faceLeft = (transform.position.x > player.position.x) ? -1 : 1;
                 transform.localScale = new Vector3(faceLeft, transform.localScale.y, transform.localScale.z);
+
+                if (attackTimer <= 0) {
+                    Projectile projectile = LevelController.CreateProjectileTowardsDirection(Game.current.ProjectileDictionary["shuriken"], transform.position + transform.localScale.x * Vector3.right * 0.5f, transform.position + transform.localScale.x * Vector3.right * 2);
+                    LevelController.SetProjectileEnemyAgainst(projectile, "Player");
+                    attackTimer = Random.Range(enemyData.attackDelayMin, enemyData.attackDelayMax);
+                }
             }
 
             float moveLeft = (transform.localScale.x < 0) ? -1 : 1;
@@ -113,7 +117,7 @@ public class Enemy : MonoBehaviour {
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;
         
-        Gizmos.DrawCube(transform.position, new Vector3(10, 2, 1));
+        //Gizmos.DrawCube(transform.position, new Vector3(10, 2, 1));
     }
 
     // Detect if a player is in box of size XY

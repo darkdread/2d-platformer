@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Dialogue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<Level>
-		<Lmao name="01">
-			<NewDialogue>
-				<Text>Hello.</Text>
-				<Text>FUck YOU!!</Text>
-				<Text>plz!!</Text>
-			</NewDialogue>
-			<NewDialogue>
-				<Text>Hello.</Text>
-				<Text>FUck YOU!!</Text>
-			</NewDialogue>
-		</Lmao>
-		<Lmao name="02">
-			<NewDialogue>
-				<Text>Hello.</Text>
-				<Text>FUck YOU!!</Text>
-			</NewDialogue>
-		</Lmao>
-	</Level>
+	<LevelContainer>
+		<Level name="1">
+			<Speaker name="main">
+				<NewDialogue id="1">
+					<Text>Dialogue 1, text 1.</Text>
+					<Text>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum </Text>
+					<Text>plz!!</Text>
+				</NewDialogue>
+				<NewDialogue id="2">
+					<Text>Hello.</Text>
+					<Text>FUck YOU!!</Text>
+				</NewDialogue>
+			</Speaker>
+			<Speaker name="notMain">
+				<NewDialogue id="1">
+					<Text>z</Text>
+					<Text>zz</Text>
+					<Text>zzz</Text>
+				</NewDialogue>
+				<NewDialogue id="2">
+					<Text>Hello.</Text>
+					<Text>FUck YOU!!</Text>
+				</NewDialogue>
+			</Speaker>
+		</Level>
+	</LevelContainer>
 </Dialogue>

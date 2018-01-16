@@ -26,12 +26,12 @@ public class CameraController : MonoBehaviour {
     public float maxOrtho = 16.875f;
 
     // Use this for initialization
-    void Start () {
+    private void Start () {
         targetOrtho = worldCamera.orthographicSize;
     }
 	
 	// Update is called once per frame
-	void Update () {
+	private void Update () {
 
         if (Main.EditorMode) {
             float scroll = Input.GetAxis("Mouse ScrollWheel");

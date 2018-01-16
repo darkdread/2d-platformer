@@ -46,7 +46,7 @@ public class Player : MonoBehaviour {
     public UnityEvent JumpEvent;
 
     // Use this for initialization
-    void Start() {
+    private void Start() {
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         myAnim = GetComponent<Animator>();
@@ -60,8 +60,9 @@ public class Player : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    private void Update() {
         if (Main.EditorMode || Game.paused) return;
+
         //get player's input on the horizontal axis.
         var x = Input.GetAxisRaw("Horizontal");
 

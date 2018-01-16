@@ -9,13 +9,4 @@ public class MyDictionary : SerializedMonoBehaviour {
     public Dictionary<string, GameObject> TileDictionary;
     public Dictionary<string, GameObject> ProjectileDictionary;
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
