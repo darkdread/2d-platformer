@@ -70,8 +70,10 @@ public class Game : SerializedMonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.Escape) && started) {
             if (pauseMenuGroup.gameObject.activeSelf) {
                 HidePauseMenu();
+                LevelController.HideDialogue();
             } else {
                 ShowPauseMenu();
+                LevelController.ShowDialogue();
             }
         }
 	}

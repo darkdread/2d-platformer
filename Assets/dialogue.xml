@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Dialogue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Level>
+		<Lmao name="01">
+			<NewDialogue>
+				<Text>Hello.</Text>
+				<Text>FUck YOU!!</Text>
+				<Text>plz!!</Text>
+			</NewDialogue>
+			<NewDialogue>
+				<Text>Hello.</Text>
+				<Text>FUck YOU!!</Text>
+			</NewDialogue>
+		</Lmao>
+		<Lmao name="02">
+			<NewDialogue>
+				<Text>Hello.</Text>
+				<Text>FUck YOU!!</Text>
+			</NewDialogue>
+		</Lmao>
+	</Level>
+</Dialogue>

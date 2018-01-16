@@ -6,11 +6,13 @@ using UnityEngine.UI;
 public class LevelController : MonoBehaviour {
 
     public static LevelController current;
+
     public static Canvas userInterface;
     public static CanvasGroup userInterfaceGroup;
     public static CanvasGroup onPlayerHitCanvasGroup;
+
+    public static bool isDialogueOpen;
     public static Image dialogueImage;
-    public static Text dialogueText;
 
     
     private List<GameObject> projectileList = new List<GameObject>();
@@ -22,9 +24,16 @@ public class LevelController : MonoBehaviour {
         userInterfaceGroup = userInterface.GetComponent<CanvasGroup>();
         onPlayerHitCanvasGroup = GameObject.Find("On Player Hit").GetComponent<CanvasGroup>();
         dialogueImage = GameObject.Find("Dialogue Box").GetComponent<Image>();
-        dialogueText = dialogueImage.GetComponentInChildren<Text>();
 
         dialogueImage.gameObject.SetActive(false);
+    }
+
+    private void Update() {
+        if (isDialogueOpen) {
+            if (Input.GetKeyDown(KeyCode.C)) {
+
+            }
+        }
     }
 
     public static Projectile CreateProjectileTowardsDirection(GameObject type, Vector3 position, Vector3 targetPosition) {
@@ -51,14 +60,12 @@ public class LevelController : MonoBehaviour {
     }
 
     public static void ShowDialogue() {
+        isDialogueOpen = true;
         dialogueImage.gameObject.SetActive(true);
     }
 
-    public static void SetDialogueText(string text) {
-        dialogueText.text = text;
-    }
-
     public static void HideDialogue() {
+        isDialogueOpen = false;
         dialogueImage.gameObject.SetActive(false);
     }
 

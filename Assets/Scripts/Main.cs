@@ -34,7 +34,7 @@ public class Main : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
+    private void Awake () {
         playBtn.onClick.AddListener(ShowLevelSelectionScreen);
         editBtn.onClick.AddListener(EditMode);
         settingsBtn.onClick.AddListener(GoToSettings);
