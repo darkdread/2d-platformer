@@ -23,6 +23,7 @@ public class Scroller : MonoBehaviour {
     private static float lastPlayerX;
     private static float followAhead;
     private static float smoothing;
+    private static float xPosLimit;
 
     private void Awake() {
         cam = Camera.main.transform;
@@ -43,6 +44,7 @@ public class Scroller : MonoBehaviour {
         CameraController cameraController = FindObjectOfType<CameraController>();
         followAhead = cameraController.followAhead;
         smoothing = cameraController.smoothing;
+        xPosLimit = cameraController.xPosLimit;
     }
     
 
@@ -54,14 +56,42 @@ public class Scroller : MonoBehaviour {
                 transform.position += Vector3.right * (deltaX * parallaxSpeed);
 
             if (disableLookAhead) {
+                float facingRight = (player.transform.localScale.x > 0) ? followAhead : -followAhead;
+                float xPos = player.position.x;
+
+                // Player is facing left
+                if (facingRight < 0) {
+                    if (player.position.x - followAhead <= xPosLimit) {
+                        if (player.position.x + followAhead <= xPosLimit) {
+                            xPos = xPosLimit + followAhead;
+                            print("TEST1");
+                        }
+                        xPos = cam.position.x;
+                    }
+
+                } else {
+                    if (player.position.x - followAhead <= xPosLimit) {
+                        if (player.position.x + followAhead <= xPosLimit) {
+                            xPos = xPosLimit + followAhead;
+                            print("TEST");
+                        }
+                        xPos = cam.position.x;
+                    }
+
+                }
+
+                print(xPos);
+
                 deltaX = player.position.x;
 
                 transform.position = Vector3.right * (deltaX * parallaxSpeed);
             }
         }
 
+        
+        //float yPos = player.transform.position.y >= yPosLimit ? player.transform.position.y : yPosLimit;
+
         lastCameraX = cam.position.x;
-        lastPlayerX = player.position.x;
 
         if (isScrolling) {
             if (cam.position.x < layers[leftIndex].position.x + viewZone) {

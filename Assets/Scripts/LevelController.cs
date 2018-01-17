@@ -60,11 +60,15 @@ public class LevelController : MonoBehaviour {
     public static void ShowDialogue() {
         isDialogueOpen = true;
         dialogueImage.gameObject.SetActive(true);
+
+        Game.PauseGame();
     }
 
     public static void HideDialogue() {
         isDialogueOpen = false;
         dialogueImage.gameObject.SetActive(false);
+
+        Game.ResumeGame();
     }
 
     public static void FlashScreen() {

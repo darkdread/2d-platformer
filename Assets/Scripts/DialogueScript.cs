@@ -11,40 +11,50 @@ public class DialogueScript : MonoBehaviour {
     private TextAsset dialogueDataXMLFile;
     public DialogueContainer dialogueData;
     public static Text dialogueText;
+    public static Text dialogueSpeaker;
     public static string dialogueCurrentText;
     public static bool isDialogueAnimating;
     public static Coroutine animateCoroutine;
 
-    public string speakerName;
-    public int level;
-    public int dialogueNumber;
-    public int textNumber;
+    public static string speakerName;
+    public static int level = 1;
+    public static int dialogueNumber = 1;
+    public static int textNumber = 0;
 
     public float letterPerSecond = 10f;
-    
+
+    private static bool justOpened = true;
+    private static DialogueContainer.NewDialogue currentDialogue;
+
     private void Awake () {
         dialogueData = DialogueContainer.LoadDialogueXML();
         dialogueData.Test();
 
-        dialogueText = GameObject.Find("Dialogue Box").GetComponentInChildren<Text>();
+        dialogueText = GameObject.Find("Script").GetComponent<Text>();
+        dialogueSpeaker = GameObject.Find("Speaker").GetComponent<Text>();
     }
-    
 
     private void Update() {
         if (LevelController.isDialogueOpen) {
+            if (justOpened) {
+                NextDialogueText();
+                currentDialogue = dialogueData.GetSpeakerDialogue(level - 1, speakerName, dialogueNumber - 1);
+                justOpened = false;
+            }
+
             if (Input.GetKeyDown(KeyCode.Space)) {
                 if (isDialogueAnimating) {
                     SkipToEndOfDialogue();
                     return;
                 }
 
-                if (NextDialogueText()) {
-                    
-                } else if (NextDialogue()) {
-                    NextDialogueText();
-                } else {
-                    ChangeDialogueSpeaker("notMain");
-                    ChangeDialogueText(1, 0);
+                if (!NextDialogueText()) {
+                    if (NextDialogueSpeaker()) {
+                        NextDialogueText();
+                    } else {
+                        justOpened = true;
+                        LevelController.HideDialogue();
+                    }
                 }
             }
         }
@@ -66,11 +76,12 @@ public class DialogueScript : MonoBehaviour {
         }
     }
 
-    public void ChangeDialogueSpeaker(string name) {
+    public static void ChangeDialogueSpeaker(string name) {
         speakerName = name;
+        SetDialogueSpeaker(name);
     }
 
-    public void ChangeDialogueText(int newDialogueNumber, int newTextNumber) {
+    public static void ChangeDialogueText(int newDialogueNumber, int newTextNumber) {
         textNumber = newTextNumber;
         dialogueNumber = newDialogueNumber;
     }
@@ -78,6 +89,20 @@ public class DialogueScript : MonoBehaviour {
     public void SkipToEndOfDialogue() {
         isDialogueAnimating = false;
         SetDialogueText(dialogueCurrentText);
+    }
+
+    public bool NextDialogueSpeaker() {
+        string newSpeaker = dialogueData.GetNextSpeaker(currentDialogue);
+
+        if (newSpeaker != null) {
+            ChangeDialogueSpeaker(currentDialogue.nextDialogueSpeaker);
+            ChangeDialogueText(currentDialogue.nextDialogueNumber, 0);
+            currentDialogue = dialogueData.GetSpeakerDialogue(level - 1, speakerName, dialogueNumber - 1);
+
+            return true;
+        }
+
+        return false;
     }
 
     public bool NextDialogueText() {
@@ -101,6 +126,8 @@ public class DialogueScript : MonoBehaviour {
 
         // Next dialogue exist
         if (nextDialogue != null) {
+            currentDialogue = nextDialogue;
+
             textNumber = 0;
             return true;
         } else {
@@ -114,7 +141,11 @@ public class DialogueScript : MonoBehaviour {
         return dialogueText.text;
     }
 
-    public static void SetDialogueText(string text) {
+    private static void SetDialogueSpeaker(string name) {
+        dialogueSpeaker.text = name;
+    }
+
+    private static void SetDialogueText(string text) {
         dialogueText.text = text;
     }
 }

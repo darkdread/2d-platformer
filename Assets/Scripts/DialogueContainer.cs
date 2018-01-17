@@ -4,6 +4,8 @@ using UnityEngine;
 using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
+using System;
+using System.Reflection;
 
 [XmlRoot("Dialogue")]
 public class DialogueContainer {
@@ -32,6 +34,12 @@ public class DialogueContainer {
         [XmlAttribute("id")]
         public int id;
 
+        [XmlAttribute("nextDialogueSpeaker")]
+        public string nextDialogueSpeaker;
+
+        [XmlAttribute("nextDialogueNumber")]
+        public int nextDialogueNumber;
+
         [XmlElement("Text")]
         public string[] Text;
     }
@@ -45,7 +53,7 @@ public class DialogueContainer {
     public static DialogueContainer LoadDialogueXML() {
 
         var serializer = new XmlSerializer(typeof(DialogueContainer));
-        using (var stream = new FileStream(Path.Combine(Application.dataPath, "dialogue.xml"), FileMode.Open)) {
+        using (var stream = new FileStream("dialogue.xml", FileMode.Open)) {
             return serializer.Deserialize(stream) as DialogueContainer;
         }
     }
@@ -68,6 +76,19 @@ public class DialogueContainer {
         }
 
         return "";
+    }
+
+    public string GetNextSpeaker(NewDialogue dialogue) {
+        if (dialogue.nextDialogueSpeaker == "")
+            return null;
+        return dialogue.nextDialogueSpeaker;
+    }
+
+    public NewDialogue GetNextSpeakerDialogue(NewDialogue dialogue) {
+        if (dialogue.nextDialogueSpeaker == null)
+            return null;
+
+        return GetSpeakerDialogue(DialogueScript.level, dialogue.nextDialogueSpeaker, dialogue.nextDialogueNumber);
     }
 
     public NewDialogue GetSpeakerDialogue(int level, string dialogueSpeaker, int dialogue) {
@@ -95,7 +116,7 @@ public class DialogueContainer {
             }
         }
 
-        Debug.Log(string.Format("Level: {0}, Speaker name: {1}, Dialogue number: {2}, Dialogue text: {3}", 1, levels[0].speaker[0].name, 1, levels[0].speaker[0].Dialogue[0].Text));
+        Debug.Log(string.Format("Level: {0}, Speaker name: {1}, Dialogue number: {2}, Dialogue text: {3}, Next speaker name: {4}, id: {5}", 1, levels[0].speaker[0].name, 1, levels[0].speaker[0].Dialogue[0].Text, levels[0].speaker[0].Dialogue[0].nextDialogueSpeaker, levels[0].speaker[0].Dialogue[0].id));
         Debug.Log(string.Format("There are {0} dialogues overall.", dialogueCount));
     }
 

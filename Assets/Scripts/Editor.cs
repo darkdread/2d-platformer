@@ -20,6 +20,7 @@ public class Editor : MonoBehaviour {
     public Button tileMenuBtn;
     public InputField saveInputField, loadInputField;
     public CanvasGroup saveMenu, loadMenu;
+    public Text textPosition;
 
     //tiles in editor, not game object
     private GameObject[] tiles;
@@ -304,6 +305,7 @@ public class Editor : MonoBehaviour {
                 Vector2 newTileSize = newTile.size;
                 SpriteRenderer spriteRenderer = tile.GetComponent<SpriteRenderer>();
                 lastHoveredTile = tile;
+                textPosition.text = string.Format("X: <b>{0}</b>, Y: <b>{1}</b>", tileX, tileY);
 
                 if (leftClick) {
                     tile.GetComponent<EditableTile>().tile = newTile;

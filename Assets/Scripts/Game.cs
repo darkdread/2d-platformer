@@ -29,7 +29,7 @@ public class Game : SerializedMonoBehaviour {
     //size is +2 because of outer walls [left/right, top/btm]
     public static int gridWidth = 128+2;
     public static int gridHeight = 64+2;
-    public GameObject player;
+    public static GameObject player;
     public GameObject gameHolder;
     public CameraController cameraController;
 
@@ -67,20 +67,17 @@ public class Game : SerializedMonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.Escape) && started) {
+		if (Input.GetKeyDown(KeyCode.Escape) && started && !LevelController.isDialogueOpen) {
             if (pauseMenuGroup.gameObject.activeSelf) {
                 HidePauseMenu();
-                LevelController.HideDialogue();
             } else {
                 ShowPauseMenu();
-                LevelController.ShowDialogue();
             }
         }
 	}
 
-    private void ShowPauseMenu() {
+    public static void PauseGame() {
         paused = true;
-        pauseMenuGroup.gameObject.SetActive(true);
 
         foreach (GameObject enemy in Enemy.list) {
             Rigidbody2D rb = enemy.GetComponent<Rigidbody2D>();
@@ -99,9 +96,8 @@ public class Game : SerializedMonoBehaviour {
         PausableRigidbody2D.PauseRigidbody(player.GetComponent<Rigidbody2D>());
     }
 
-    private void HidePauseMenu() {
+    public static void ResumeGame() {
         paused = false;
-        pauseMenuGroup.gameObject.SetActive(false);
 
         foreach (GameObject enemy in Enemy.list) {
             Rigidbody2D rb = enemy.GetComponent<Rigidbody2D>();
@@ -118,6 +114,16 @@ public class Game : SerializedMonoBehaviour {
         }
 
         PausableRigidbody2D.ResumeRigidbody(player.GetComponent<Rigidbody2D>());
+    }
+
+    private void ShowPauseMenu() {
+        pauseMenuGroup.gameObject.SetActive(true);
+        PauseGame();
+    }
+
+    private void HidePauseMenu() {
+        pauseMenuGroup.gameObject.SetActive(false);
+        ResumeGame();
     }
 
     private void BackToMenu() {
@@ -261,16 +267,6 @@ public class Game : SerializedMonoBehaviour {
         }
 
         cameraController.transform.position = new Vector3(30, 15, cameraController.transform.position.z);
-    }
-
-    public void PauseGame() {
-        //Time.timeScale = 0;
-        paused = true;
-    }
-
-    public void ResumeGame() {
-        //Time.timeScale = 1;
-        paused = false;
     }
 
     public GameObject GetTile(int x, int y) {

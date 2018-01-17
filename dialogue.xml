@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Dialogue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<LevelContainer>
+		<Level name="1">
+			<Speaker name="Narrator">
+				<NewDialogue id="1" nextDialogueSpeaker="Yasuo" nextDialogueNumber="1">
+					<Text>Dialogue 1, speaker 1, text 1.</Text>
+					<Text>Dialogue 1, speaker 1, text 2.</Text>
+					<Text>Dialogue 1, speaker 1, text 3.</Text>
+				</NewDialogue>
+				<NewDialogue id="2" nextDialogueSpeaker="Yasuo" nextDialogueNumber="2">
+					<Text>Dialogue 2, speaker 1, text 1.</Text>
+					<Text>Dialogue 2, speaker 1, text 2.</Text>
+					<Text>Dialogue 2, speaker 1, text 3.</Text>
+					<Text>Dialogue 2, speaker 1, text 4.</Text>
+					<Text>Dialogue 2, speaker 1, text 5.</Text>
+				</NewDialogue>
+			</Speaker>
+			<Speaker name="Yasuo">
+				<NewDialogue id="1" nextDialogueSpeaker="" nextDialogueNumber="1">
+					<Text>Dialogue 1, speaker 2, text 1.</Text>
+					<Text>zz</Text>
+					<Text>zzz</Text>
+				</NewDialogue>
+				<NewDialogue id="2" nextDialogueSpeaker="4HEad" nextDialogueNumber="2">
+					<Text>Dialogue 2, speaker 2, text 1.</Text>
+					<Text>FUck YOU!!</Text>
+				</NewDialogue>
+			</Speaker>
+			<Speaker name="4HEad">
+				<NewDialogue id="1" nextDialogueSpeaker="" nextDialogueNumber="1">
+					<Text>Dialogue 1, speaker 2, text 1.</Text>
+					<Text>zz</Text>
+					<Text>zzz</Text>
+				</NewDialogue>
+				<NewDialogue id="2" nextDialogueSpeaker="" nextDialogueNumber="2">
+					<Text>Dialogue 2, speaker 3, text 1.</Text>
+					<Text>FUck YOU!!</Text>
+				</NewDialogue>
+			</Speaker>
+		</Level>
+	</LevelContainer>
+</Dialogue>

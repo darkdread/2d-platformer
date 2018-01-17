@@ -11,6 +11,13 @@ public class CameraController : MonoBehaviour {
     public Camera worldCamera;
     //the amount of units to move ahead
     public float followAhead;
+
+    // If the camera is <= this limit, set it to the limit. Otherwise, if the camera is >= the world size - this limit, set it to the the world size - limit.
+    public float xPosLimit;
+
+    // If the camera is above this limit, follow the player. Otherwise, set it to the limit.
+    public float yPosLimit;
+
     //how long it will take for the camera to transition
     public float smoothing;
     public Material mat;
@@ -51,13 +58,22 @@ public class CameraController : MonoBehaviour {
         }
 
         if (player == null) return;
+
         //if the player is facing right, move the camera to the right. Vice-versa
         float facingRight = (player.transform.localScale.x > 0) ? followAhead : -followAhead;
-        //if the player is on the ground, set the camera y position to 0. Or else, follow the player
-        float yPos = player.transform.position.y + 2;// > 0.1? player.transform.position.y: 0;
+        
+        float worldToPixels = ((Screen.height / 2.0f) / Camera.main.orthographicSize);
+        float pixelToWorld = (Camera.main.orthographicSize / (Screen.height / 2.0f));
+        
+        float xPos = player.transform.position.x + facingRight <= xPosLimit ? xPosLimit - facingRight : 
+            player.transform.position.x + facingRight >= Game.gridWidth - xPosLimit ? Game.gridWidth - xPosLimit - facingRight - 1 : 
+            player.transform.position.x;
+
+        float yPos = player.transform.position.y >= yPosLimit ? player.transform.position.y : yPosLimit;
+
 
         //the position to move the camera
-        targetPosition = new Vector3(player.transform.position.x + facingRight, yPos, transform.position.z);
+        targetPosition = new Vector3(xPos + facingRight, yPos, transform.position.z);
 
         //move the camera with some smoothing
         transform.position = Vector3.Lerp(transform.position, targetPosition, smoothing * Time.deltaTime);

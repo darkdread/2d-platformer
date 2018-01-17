@@ -143,7 +143,37 @@ public class Main : MonoBehaviour {
         cameraController.targetOrtho = 5f;
         GameController.GetComponent<Game>().GenerateMapFromJson(json);
         Scroller.SetPlayerTransform(FindObjectOfType<Player>().transform);
-        //GameController.PauseGame();
+
+        Vector2 tilePos, boxSize;
+        if (fileName == "level01") {
+            tilePos = new Vector2(5, 1);
+            boxSize = new Vector2(5, 5);
+            DialogueSpeaker speaker = CreateSpeakerAtPos(tilePos, boxSize);
+            speaker.name = "Narrator";
+            speaker.dialogueNumber = 1;
+            speaker.spoken = true;
+
+            tilePos = new Vector2(15, 1);
+            boxSize = new Vector2(5, 5);
+            DialogueSpeaker speaker2 = CreateSpeakerAtPos(tilePos, boxSize);
+            speaker2.name = "Narrator";
+            speaker2.dialogueNumber = 2;
+            speaker2.spoken = true;
+        }
+    }
+
+    private DialogueSpeaker CreateSpeakerAtPos(Vector2 tilePos, Vector2 boxSize) {
+        GameObject tile = new GameObject("Empty GameObject");
+        tile.transform.position = tilePos;
+        tile.tag = "DialogueSpeaker";
+
+        DialogueSpeaker speaker = tile.AddComponent<DialogueSpeaker>();
+
+        BoxCollider2D collider = tile.AddComponent<BoxCollider2D>();
+        collider.size = boxSize;
+        collider.isTrigger = true;
+
+        return speaker;
     }
 
     void GoToSettings() {

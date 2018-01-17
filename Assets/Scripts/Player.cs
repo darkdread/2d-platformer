@@ -168,4 +168,17 @@ public class Player : MonoBehaviour {
 
         LevelController.FlashScreen();
     }
+
+    private void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.CompareTag("DialogueSpeaker")) {
+            DialogueSpeaker speaker = collision.GetComponent<DialogueSpeaker>();
+            if (speaker.spoken) return;
+
+            LevelController.ShowDialogue();
+            DialogueScript.ChangeDialogueSpeaker(speaker.name);
+            DialogueScript.ChangeDialogueText(speaker.dialogueNumber, speaker.dialogueText);
+
+            speaker.spoken = true;
+        }
+    }
 }
