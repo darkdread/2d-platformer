@@ -30,7 +30,7 @@ public class Game : SerializedMonoBehaviour {
     public static int gridWidth = 128+2;
     public static int gridHeight = 64+2;
     public static GameObject player;
-    public GameObject gameHolder;
+    public static Transform gameHolder;
     public CameraController cameraController;
 
     private bool combined;
@@ -62,6 +62,8 @@ public class Game : SerializedMonoBehaviour {
         TileDictionary = myDictionary.TileDictionary;
         ProjectileDictionary = myDictionary.ProjectileDictionary;
         tiles = new GameObject[gridWidth, gridHeight];
+        gameHolder = GameObject.Find("GameHolder").transform;
+
         returnToMainMenu.onClick.AddListener(BackToMenu);
     }
 	

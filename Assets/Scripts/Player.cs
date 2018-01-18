@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
     private const float defaultJumpSpeed = 8f;
     private Game gameController;
-    private LevelController levelController;
 
     //the movement speed of the player
     public float moveSpeed;
@@ -15,6 +15,10 @@ public class Player : MonoBehaviour {
 
     // Front of player
     public Transform playerFront;
+
+    // Skills - Code logic credits: https://www.youtube.com/watch?v=8Xgao1qP7xw
+    public float[] skillCooldown;
+    public Image[] skillImage;
 
     //to check if the player is on the ground
     public Transform groundCheck;
@@ -51,7 +55,11 @@ public class Player : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
         myAnim = GetComponent<Animator>();
         gameController = FindObjectOfType<Game>();
-        levelController = FindObjectOfType<LevelController>();
+        
+        // Reset cooldown
+        foreach(Image image in skillImage) {
+            image.fillAmount = 1;
+        }
 
         //player's initial health
         health = maxHealth;
@@ -120,10 +128,27 @@ public class Player : MonoBehaviour {
             // If the player throws a projectile
             if (Input.GetKeyDown(KeyCode.C)) {
                 Vector3 projectilePos = playerFront.position;
+                Projectile projectile = LevelController.CreateProjectileTowardsDirection(gameController.ProjectileDictionary["kunai"], projectilePos, projectilePos + transform.localScale.x * Vector3.right * 2);
+                LevelController.SetProjectileEnemyAgainst(projectile, "Enemy");
+                projectile.transform.parent = Game.gameHolder;
+            }
+
+            for(int i = 0; i < skillImage.Length; i++) {
+                if (skillImage[i].fillAmount < 1) {
+                    skillImage[i].fillAmount += 1 / skillCooldown[i] * Time.deltaTime;
+                }
+            }
+
+            // If the player uses skill 1
+            if (Input.GetKeyDown(KeyCode.V) && skillImage[0].fillAmount >= 1) {
+                skillImage[0].fillAmount = 0;
+
+                Vector3 projectilePos = playerFront.position;
                 Projectile projectile = LevelController.CreateProjectileTowardsDirection(gameController.ProjectileDictionary["shuriken"], projectilePos, projectilePos + transform.localScale.x * Vector3.right * 2);
                 LevelController.SetProjectileEnemyAgainst(projectile, "Enemy");
-                projectile.transform.parent = gameController.gameHolder.transform;
+                projectile.transform.parent = Game.gameHolder;
             }
+
         } else if (knockbackTimer > 0) {
             //if the player is getting knockedbacked, decrease the timer
             knockbackTimer -= Time.deltaTime;
@@ -175,7 +200,7 @@ public class Player : MonoBehaviour {
             if (speaker.spoken) return;
 
             LevelController.ShowDialogue();
-            DialogueScript.ChangeDialogueSpeaker(speaker.name);
+            DialogueScript.ChangeDialogueSpeaker(speaker.speakerName);
             DialogueScript.ChangeDialogueText(speaker.dialogueNumber, speaker.dialogueText);
 
             speaker.spoken = true;

@@ -62,8 +62,8 @@ public class CameraController : MonoBehaviour {
         //if the player is facing right, move the camera to the right. Vice-versa
         float facingRight = (player.transform.localScale.x > 0) ? followAhead : -followAhead;
         
-        float worldToPixels = ((Screen.height / 2.0f) / Camera.main.orthographicSize);
-        float pixelToWorld = (Camera.main.orthographicSize / (Screen.height / 2.0f));
+        //float worldToPixels = ((Screen.height / 2.0f) / Camera.main.orthographicSize);
+        //float pixelToWorld = (Camera.main.orthographicSize / (Screen.height / 2.0f));
         
         float xPos = player.transform.position.x + facingRight <= xPosLimit ? xPosLimit - facingRight : 
             player.transform.position.x + facingRight >= Game.gridWidth - xPosLimit ? Game.gridWidth - xPosLimit - facingRight - 1 : 

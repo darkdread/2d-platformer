@@ -20,8 +20,7 @@
 			<Speaker name="Yasuo">
 				<NewDialogue id="1" nextDialogueSpeaker="" nextDialogueNumber="1">
 					<Text>Dialogue 1, speaker 2, text 1.</Text>
-					<Text>zz</Text>
-					<Text>zzz</Text>
+					<Text>Hasagi</Text>
 				</NewDialogue>
 				<NewDialogue id="2" nextDialogueSpeaker="4HEad" nextDialogueNumber="2">
 					<Text>Dialogue 2, speaker 2, text 1.</Text>

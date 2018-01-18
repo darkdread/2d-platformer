@@ -13,8 +13,6 @@ public class LevelController : MonoBehaviour {
 
     public static bool isDialogueOpen;
     public static Image dialogueImage;
-    
-    private List<GameObject> projectileList = new List<GameObject>();
 
     private void Awake() {
         current = this;

@@ -61,28 +61,30 @@ public class Scroller : MonoBehaviour {
 
                 // Player is facing left
                 if (facingRight < 0) {
+
                     if (player.position.x - followAhead <= xPosLimit) {
                         if (player.position.x + followAhead <= xPosLimit) {
                             xPos = xPosLimit + followAhead;
-                            print("TEST1");
                         }
-                        xPos = cam.position.x;
+                        xPos = xPosLimit + followAhead;
                     }
 
                 } else {
+                    // Camera starts moving near the edge of left side
                     if (player.position.x - followAhead <= xPosLimit) {
+                        // Camera stops moving near the edge of left side
                         if (player.position.x + followAhead <= xPosLimit) {
                             xPos = xPosLimit + followAhead;
-                            print("TEST");
                         }
-                        xPos = cam.position.x;
+                        xPos = xPosLimit + followAhead;
                     }
-
                 }
 
-                print(xPos);
+                xPos = player.position.x - followAhead <= xPosLimit ? xPosLimit + followAhead :
+                    player.position.x + followAhead >= Game.gridWidth - xPosLimit ? Game.gridWidth - xPosLimit - followAhead:
+                    player.position.x;
 
-                deltaX = player.position.x;
+                deltaX = xPos;
 
                 transform.position = Vector3.right * (deltaX * parallaxSpeed);
             }
@@ -111,8 +113,6 @@ public class Scroller : MonoBehaviour {
     }
 
     private void ScrollLeft() {
-        int lastRight = rightIndex;
-        //layers[rightIndex].position = Vector3.right * (layers[leftIndex].position.x - backgroundSize);
         layers[rightIndex].position = new Vector3(layers[leftIndex].position.x - backgroundSize, 0, posZ);
         leftIndex = rightIndex;
         rightIndex--;
@@ -122,8 +122,6 @@ public class Scroller : MonoBehaviour {
     }
 
     private void ScrollRight() {
-        int lastLeft = leftIndex;
-        //layers[leftIndex].position = Vector3.right * (layers[rightIndex].position.x + backgroundSize);
         layers[leftIndex].position = new Vector3(layers[rightIndex].position.x + backgroundSize, 0, posZ);
         rightIndex = leftIndex;
         leftIndex++;

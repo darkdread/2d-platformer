@@ -12,6 +12,7 @@ public class Main : MonoBehaviour {
     public Editor EditorController;
 
     public GameObject[] backgrounds;
+    public Transform cooldownHolder;
     public CanvasGroup mainMenu;
     public Canvas levelSelection;
     public Button chapter1;
@@ -35,6 +36,9 @@ public class Main : MonoBehaviour {
 
     // Use this for initialization
     private void Awake () {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 30;
+
         playBtn.onClick.AddListener(ShowLevelSelectionScreen);
         editBtn.onClick.AddListener(EditMode);
         settingsBtn.onClick.AddListener(GoToSettings);
@@ -88,6 +92,7 @@ public class Main : MonoBehaviour {
     public void ShowMenu() {
         editorMode = false;
 
+        cooldownHolder.gameObject.SetActive(false);
         mainMenu.gameObject.SetActive(true);
         HideBackground();
     }
@@ -143,31 +148,31 @@ public class Main : MonoBehaviour {
         cameraController.targetOrtho = 5f;
         GameController.GetComponent<Game>().GenerateMapFromJson(json);
         Scroller.SetPlayerTransform(FindObjectOfType<Player>().transform);
+        cooldownHolder.gameObject.SetActive(true);
 
         Vector2 tilePos, boxSize;
         if (fileName == "level01") {
             tilePos = new Vector2(5, 1);
             boxSize = new Vector2(5, 5);
-            DialogueSpeaker speaker = CreateSpeakerAtPos(tilePos, boxSize);
-            speaker.name = "Narrator";
-            speaker.dialogueNumber = 1;
+            DialogueSpeaker speaker = CreateSpeakerAtPos(tilePos, boxSize, "Narrator", 1);
             speaker.spoken = true;
 
             tilePos = new Vector2(15, 1);
             boxSize = new Vector2(5, 5);
-            DialogueSpeaker speaker2 = CreateSpeakerAtPos(tilePos, boxSize);
-            speaker2.name = "Narrator";
-            speaker2.dialogueNumber = 2;
-            speaker2.spoken = true;
+            DialogueSpeaker speaker2 = CreateSpeakerAtPos(tilePos, boxSize, "Narrator", 2);
+            //speaker2.spoken = true;
         }
     }
 
-    private DialogueSpeaker CreateSpeakerAtPos(Vector2 tilePos, Vector2 boxSize) {
-        GameObject tile = new GameObject("Empty GameObject");
+    private DialogueSpeaker CreateSpeakerAtPos(Vector2 tilePos, Vector2 boxSize, string name, int dialogueNumber) {
+        GameObject tile = new GameObject("Speaker GameObject");
+        tile.transform.SetParent(Game.gameHolder);
         tile.transform.position = tilePos;
         tile.tag = "DialogueSpeaker";
 
         DialogueSpeaker speaker = tile.AddComponent<DialogueSpeaker>();
+        speaker.speakerName = name;
+        speaker.dialogueNumber = dialogueNumber;
 
         BoxCollider2D collider = tile.AddComponent<BoxCollider2D>();
         collider.size = boxSize;

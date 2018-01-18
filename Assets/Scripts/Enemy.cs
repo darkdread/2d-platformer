@@ -82,7 +82,7 @@ public class Enemy : MonoBehaviour {
                 transform.localScale = new Vector3(faceLeft, transform.localScale.y, transform.localScale.z);
 
                 if (attackTimer <= 0) {
-                    Projectile projectile = LevelController.CreateProjectileTowardsDirection(Game.current.ProjectileDictionary["shuriken"], transform.position + transform.localScale.x * Vector3.right * 0.5f, transform.position + transform.localScale.x * Vector3.right * 2);
+                    Projectile projectile = LevelController.CreateProjectileTowardsDirection(Game.current.ProjectileDictionary["kunai"], transform.position + transform.localScale.x * Vector3.right * 0.5f, transform.position + transform.localScale.x * Vector3.right * 2);
                     LevelController.SetProjectileEnemyAgainst(projectile, "Player");
                     attackTimer = Random.Range(enemyData.attackDelayMin, enemyData.attackDelayMax);
                 }
