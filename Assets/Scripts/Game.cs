@@ -352,8 +352,9 @@ public class Game : SerializedMonoBehaviour {
 
             Vector3 worldSpace = tile.transform.position;
             PolygonCollider2D polygonCollider = tile.GetComponent<PolygonCollider2D>();
+            TileType tileType = tile.GetComponent<TileType>();
 
-            if (polygonCollider) {
+            if (polygonCollider && tileType.tile.name == "Terrain") {
 
                 // If the rotation of the tile is not 0, do not combine.
                 // There is a problem with rotations and colliders. The position of the points do not change, but the bounds change.
@@ -368,7 +369,7 @@ public class Game : SerializedMonoBehaviour {
                 for(int i = 0; i < polyPoints.Length; i++) {
                     polyPoints[i] = new Vector2(polyPoints[i].x + worldSpace.x, polyPoints[i].y + worldSpace.y);
                 }
-
+                
                 List<Vector2> vectorList = polyPoints.ToList<Vector2>();
                 polygonPointsCount += vectorList.Count;
 

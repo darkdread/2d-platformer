@@ -60,10 +60,18 @@ public class Projectile : MonoBehaviour {
             if (collision.gameObject.CompareTag(tag)) {
                 collided = true;
 
-                Enemy enemy = collision.gameObject.GetComponent<Enemy>();
-                Player player = collision.gameObject.GetComponent<Player>();
+                Enemy enemy = collision.GetComponent<Enemy>();
+                Player player = collision.GetComponent<Player>();
+                IDamageableObject damageableObject = collision.GetComponent<IDamageableObject>();
 
-                if (enemy) {
+                if (damageableObject != null) {
+                    damageableObject.TakeDamage(projectileData.damage);
+                    float directionX = (transform.localScale.x > 0) ? 1 : -1;
+                    Vector2 knockbackForce = new Vector2(projectileData.knockbackForce * directionX, Mathf.Abs(projectileData.knockbackForce));
+                    damageableObject.Knockback(knockbackForce);
+                }
+
+                /*if (enemy) {
                     enemy.TakeDamage(projectileData.damage);
                     float directionX = (transform.localScale.x > 0) ? 1 : -1;
                     Vector2 knockbackForce = new Vector2(projectileData.knockbackForce * directionX, Mathf.Abs(projectileData.knockbackForce));
@@ -73,7 +81,7 @@ public class Projectile : MonoBehaviour {
                     float directionX = (transform.localScale.x > 0) ? 1 : -1;
                     Vector2 knockbackForce = new Vector2(projectileData.knockbackForce * directionX, Mathf.Abs(projectileData.knockbackForce));
                     player.Knockback(knockbackForce);
-                }
+                }*/
 
                 Destroy(gameObject);
             }

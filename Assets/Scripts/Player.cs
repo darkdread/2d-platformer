@@ -4,7 +4,12 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour {
+public interface IDamageableObject {
+    void TakeDamage(float value);
+    void Knockback(Vector2 force);
+}
+
+public class Player : MonoBehaviour, IDamageableObject {
     private const float defaultJumpSpeed = 8f;
     private Game gameController;
 

@@ -86,7 +86,8 @@ public class Scroller : MonoBehaviour {
 
                 deltaX = xPos;
 
-                transform.position = Vector3.right * (deltaX * parallaxSpeed);
+                transform.position = new Vector3(deltaX * parallaxSpeed, transform.position.y, 0);
+                //transform.position = Vector3.right * (deltaX * parallaxSpeed);
             }
         }
 
@@ -113,7 +114,7 @@ public class Scroller : MonoBehaviour {
     }
 
     private void ScrollLeft() {
-        layers[rightIndex].position = new Vector3(layers[leftIndex].position.x - backgroundSize, 0, posZ);
+        layers[rightIndex].position = new Vector3(layers[leftIndex].position.x - backgroundSize, layers[leftIndex].position.y, posZ);
         leftIndex = rightIndex;
         rightIndex--;
         if (rightIndex < 0) {
@@ -122,7 +123,7 @@ public class Scroller : MonoBehaviour {
     }
 
     private void ScrollRight() {
-        layers[leftIndex].position = new Vector3(layers[rightIndex].position.x + backgroundSize, 0, posZ);
+        layers[leftIndex].position = new Vector3(layers[rightIndex].position.x + backgroundSize, layers[rightIndex].position.y, posZ);
         rightIndex = leftIndex;
         leftIndex++;
         if (leftIndex == layers.Length) {

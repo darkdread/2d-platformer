@@ -16,7 +16,7 @@ public class Editor : MonoBehaviour {
     public Button backBtn;
     public Button saveMenuBtn, loadMenuBtn;
     public Button saveBtn, loadBtn;
-    public Button showTerrainBtn, showObjectBtn;
+    public Button showTerrainBtn, showObjectBtn, showTrapBtn;
     public Button tileMenuBtn;
     public InputField saveInputField, loadInputField;
     public CanvasGroup saveMenu, loadMenu;
@@ -120,6 +120,10 @@ public class Editor : MonoBehaviour {
 
         showObjectBtn.onClick.AddListener(delegate {
             ShowTileType("Object");
+        });
+
+        showTrapBtn.onClick.AddListener(delegate {
+            ShowTileType("Trap");
         });
 
         saveMenuBtn.onClick.AddListener(ShowSaveMenu);
