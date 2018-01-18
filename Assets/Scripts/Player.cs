@@ -9,6 +9,7 @@ public interface IDamageableObject {
     void Knockback(Vector2 force);
 }
 
+
 public class Player : MonoBehaviour, IDamageableObject {
     private const float defaultJumpSpeed = 8f;
     private Game gameController;
@@ -23,7 +24,7 @@ public class Player : MonoBehaviour, IDamageableObject {
 
     // Skills - Code logic credits: https://www.youtube.com/watch?v=8Xgao1qP7xw
     public float[] skillCooldown;
-    public Image[] skillImage;
+    public GameObject[] skillImage;
 
     //to check if the player is on the ground
     public Transform groundCheck;
@@ -61,11 +62,13 @@ public class Player : MonoBehaviour, IDamageableObject {
         myAnim = GetComponent<Animator>();
         gameController = FindObjectOfType<Game>();
         
+        
         // Reset cooldown
-        foreach(Image image in skillImage) {
+        foreach(GameObject obj in skillImage) {
+            Image image = obj.GetComponent<Image>();
             image.fillAmount = 1;
         }
-
+        
         //player's initial health
         health = maxHealth;
         //player's initial respawn position
@@ -139,20 +142,26 @@ public class Player : MonoBehaviour, IDamageableObject {
             }
 
             for(int i = 0; i < skillImage.Length; i++) {
-                if (skillImage[i].fillAmount < 1) {
-                    skillImage[i].fillAmount += 1 / skillCooldown[i] * Time.deltaTime;
+                Image image = skillImage[i].GetComponent<Image>();
+
+                if (image.fillAmount < 1) {
+                    image.fillAmount += 1 / skillCooldown[i] * Time.deltaTime;
+                }
+
+                // If the player uses skill 1
+                if (image.fillAmount >= 1) {
+                    if (Input.GetKeyDown(KeyCode.V) && i == 0) {
+                        image.fillAmount = 0;
+
+                        Vector3 projectilePos = playerFront.position;
+                        Projectile projectile = LevelController.CreateProjectileTowardsDirection(gameController.ProjectileDictionary["shuriken"], projectilePos, projectilePos + transform.localScale.x * Vector3.right * 2);
+                        LevelController.SetProjectileEnemyAgainst(projectile, "Enemy");
+                        projectile.transform.parent = Game.gameHolder;
+                    }
                 }
             }
 
-            // If the player uses skill 1
-            if (Input.GetKeyDown(KeyCode.V) && skillImage[0].fillAmount >= 1) {
-                skillImage[0].fillAmount = 0;
-
-                Vector3 projectilePos = playerFront.position;
-                Projectile projectile = LevelController.CreateProjectileTowardsDirection(gameController.ProjectileDictionary["shuriken"], projectilePos, projectilePos + transform.localScale.x * Vector3.right * 2);
-                LevelController.SetProjectileEnemyAgainst(projectile, "Enemy");
-                projectile.transform.parent = Game.gameHolder;
-            }
+            
 
         } else if (knockbackTimer > 0) {
             //if the player is getting knockedbacked, decrease the timer
@@ -172,13 +181,22 @@ public class Player : MonoBehaviour, IDamageableObject {
     // Allows other classes to knockback the player
     public void Knockback(Vector2 force) {
 
-        // if the enemy is not already getting knocked
+        // if the player is not already getting knocked
         if (knockbackTimer <= 0) {
             //set the length of the knockback
             knockbackTimer = knockbackLength;
 
             spriteRenderer.color = Color.red;
             rb.velocity = force;
+        } else {
+            //set the length of the knockback
+            knockbackTimer = knockbackLength;
+
+            // If the new knockback force is greater than the current knockback force, we replace the force with the greater one.
+            float newX = force.x > rb.velocity.x ? force.x : rb.velocity.x;
+            float newY = force.y > rb.velocity.y ? force.y : rb.velocity.y;
+
+            rb.velocity = new Vector2(newX, newY);
         }
     }
 
