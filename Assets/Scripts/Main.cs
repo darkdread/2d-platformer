@@ -15,16 +15,16 @@ public class Main : MonoBehaviour {
     public Transform cooldownHolder;
     public CanvasGroup mainMenu;
     public Canvas levelSelection;
-    public Button chapter1;
-    public Button chapter2;
-    public Button chapter3;
+    public Button chapter0, chapter1, chapter2, chapter3;
 
     public Button playBtn;
     public Button editBtn;
     public Button settingsBtn;
     public Button exitBtn;
 
-    private int playerProgress;
+    public static int mapLevel;
+    public static Progress playerProgress;
+    public CanvasGroup[] chapterGroup;
 
     private static bool editorMode;
 
@@ -35,7 +35,7 @@ public class Main : MonoBehaviour {
     }
 
     // Use this for initialization
-    private void Awake () {
+    private void Awake() {
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 30;
 
@@ -44,31 +44,48 @@ public class Main : MonoBehaviour {
         settingsBtn.onClick.AddListener(GoToSettings);
         exitBtn.onClick.AddListener(ExitToDesktop);
 
-        chapter1.onClick.AddListener(delegate () {
-            StartGame("level01");
+        chapter0.onClick.AddListener(delegate () {
+            StartGame("level00");
         });
+        chapter1.onClick.AddListener(delegate () {
+            if (playerProgress.level >= 1)
+                StartGame("level01");
+        });
+
+        /*
         chapter2.onClick.AddListener(delegate () {
-            StartGame("level02");
+            if (playerProgress >= 2)
+                StartGame("level02");
         });
         chapter3.onClick.AddListener(delegate () {
+
             StartGame("level03");
         });
-        SaveProgress();
-        LoadProgress();
+        */
+
+        //SaveProgress();
+        if (!LoadProgress()) {
+            playerProgress = new Progress(0);
+        }
+
+        UpdateLevelScreen();
 
         ShowMenu();
     }
 
-    public void SaveProgress() {
+    public static void SaveProgress() {
         SaveLoad.SaveProgress("test");
     }
 
-    public void LoadProgress() {
+    public static bool LoadProgress() {
         string json = SaveLoad.LoadProgress("test");
+        if (json == null) return false;
+
         Progress progress = JsonUtility.FromJson<Progress>(json);
 
-        playerProgress = progress.level;
-        print(playerProgress);
+        playerProgress = progress;
+
+        return true;
     }
 
     public void HideBackground() {
@@ -88,10 +105,22 @@ public class Main : MonoBehaviour {
         mainMenu.gameObject.SetActive(false);
     }
 
+    public void UpdateLevelScreen() {
+
+        for (int i = 0; i < chapterGroup.Length; i++) {
+            if (playerProgress.level >= i) {
+                chapterGroup[i].alpha = 1;
+            } else {
+                chapterGroup[i].alpha = 0.3f;
+            }
+        }
+    }
+
     //show main menu
     public void ShowMenu() {
         editorMode = false;
 
+        UpdateLevelScreen();
         cooldownHolder.gameObject.SetActive(false);
         mainMenu.gameObject.SetActive(true);
         HideBackground();
@@ -101,10 +130,8 @@ public class Main : MonoBehaviour {
         editorMode = true;
         string fileName = "level01";
 
-        if (fileName == null) {
+        if (!EditorController.GetComponent<Editor>().LoadMap(fileName)) {
             GameController.GetComponent<Game>().GenerateMap();
-        } else {
-            EditorController.GetComponent<Editor>().LoadMap(fileName);
         }
 
         HideMenu();
@@ -151,16 +178,24 @@ public class Main : MonoBehaviour {
         cooldownHolder.gameObject.SetActive(true);
 
         Vector2 tilePos, boxSize;
-        if (fileName == "level01") {
-            tilePos = new Vector2(5, 1);
-            boxSize = new Vector2(5, 5);
-            DialogueSpeaker speaker = CreateSpeakerAtPos(tilePos, boxSize, "Narrator", 1);
-            speaker.spoken = true;
 
-            tilePos = new Vector2(15, 1);
-            boxSize = new Vector2(5, 5);
-            DialogueSpeaker speaker2 = CreateSpeakerAtPos(tilePos, boxSize, "Narrator", 2);
-            //speaker2.spoken = true;
+        switch (fileName) {
+            default:
+            case "level00":
+                mapLevel = 0;
+                break;
+            case "level01":
+                mapLevel = 1;
+                tilePos = new Vector2(5, 1);
+                boxSize = new Vector2(5, 5);
+                DialogueSpeaker speaker = CreateSpeakerAtPos(tilePos, boxSize, "Narrator", 1);
+                speaker.spoken = true;
+
+                tilePos = new Vector2(15, 1);
+                boxSize = new Vector2(5, 5);
+                DialogueSpeaker speaker2 = CreateSpeakerAtPos(tilePos, boxSize, "Narrator", 2);
+                //speaker2.spoken = true;
+                break;
         }
     }
 

@@ -56,10 +56,11 @@ public class Editor : MonoBehaviour {
     }
 
 	// Use this for initialization
-	void Start () {
+	private void Start () {
         tiles = Resources.LoadAll<GameObject>(string.Format("{0}", folderName));
-        gridTile = Resources.Load<GameObject>(string.Format("{0}/Grid", folderName));
+        gridTile = Game.TileDictionary["Grid"];
         Tile[] allTileTypes = Resources.LoadAll<Tile>(string.Format("{0}/TileType", folderName));
+
         foreach (Tile tile in allTileTypes) {
             string tileType = tile.name;
             EditableTiles.Add(tileType, tile);
@@ -131,9 +132,11 @@ public class Editor : MonoBehaviour {
 
         saveBtn.onClick.AddListener(delegate {
             SaveMap(saveInputField.text);
+            HideSaveMenu();
         });
         loadBtn.onClick.AddListener(delegate {
             LoadMap(loadInputField.text);
+            HideLoadMenu();
         });
 
         tileMenuBtn.onClick.AddListener(delegate {
@@ -172,22 +175,20 @@ public class Editor : MonoBehaviour {
 
     public void SaveMap(string fileName = "") {
         SaveLoad.SaveMap(fileName);
-
-        allowCameraMovement = true;
-        HideSaveMenu();
     }
 
-    public void LoadMap(string fileName = "") {
+    public bool LoadMap(string fileName = "") {
         string json = SaveLoad.LoadMap(fileName);
 
-        // Generate map and close menu
+        // Generate map
         if (json != null) {
             GameController.ClearMap();
             GameController.GenerateMapFromJson(json);
-            HideLoadMenu();
+
+            return true;
         }
 
-        allowCameraMovement = true;
+        return false;
     }
 
     private void ShowSaveMenu() {
@@ -240,7 +241,7 @@ public class Editor : MonoBehaviour {
         else
             currentTileBtn.GetComponent<Image>().sprite = tile.GetComponent<SpriteRenderer>().sprite;
 
-        selectedTile = Resources.Load<GameObject>(string.Format("{0}/{1}", folderName, tile.name));
+        selectedTile = Game.TileDictionary[tile.name];
     }
 
     private bool IsPointerOnUI() {

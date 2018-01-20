@@ -5,7 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ProjectileData", menuName = "Lmao/Projectile")]
 public class ProjectileObject : ScriptableObject {
 
-    public float force;
+    public float speed;
     public float knockbackForce;
     public float damage;
+
 }

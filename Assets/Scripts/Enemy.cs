@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour, IDamageableObject {
 
     private float health;
     private float movementTimer;
-    private float movementCheckDelayTimer = 1f;
+    private float movementCheckDelayTimer = 0.5f;
     private float lastEnemyX;
     private float attackTimer;
 
@@ -45,7 +45,8 @@ public class Enemy : MonoBehaviour, IDamageableObject {
 
         bool isGrounded = false;
         // Check if the enemy is on the ground.
-        Collider2D[] result = (transform.localScale.x > 0) ? Physics2D.OverlapCircleAll(groundCheckRight.position, enemyData.groundCheckRadius, enemyData.realGround) : Physics2D.OverlapCircleAll(groundCheckLeft.position, enemyData.groundCheckRadius, enemyData.realGround);
+        //Collider2D[] result = (transform.localScale.x > 0) ? Physics2D.OverlapCircleAll(groundCheckRight.position, enemyData.groundCheckRadius, enemyData.realGround) : Physics2D.OverlapCircleAll(groundCheckLeft.position, enemyData.groundCheckRadius, enemyData.realGround);
+        Collider2D[] result = Physics2D.OverlapCircleAll(groundCheckRight.position, enemyData.groundCheckRadius, enemyData.realGround);
 
         // Make sure we aren't checking for the enemy itself
         foreach (Collider2D collider in result) {

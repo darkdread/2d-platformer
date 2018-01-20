@@ -23,7 +23,7 @@ public class Game : SerializedMonoBehaviour {
 
     public LevelController levelController;
     public MyDictionary myDictionary;
-    public Dictionary<string, GameObject> TileDictionary;
+    public static Dictionary<string, GameObject> TileDictionary = new Dictionary<string, GameObject>();
     public Dictionary<string, GameObject> ProjectileDictionary;
 
     //size is +2 because of outer walls [left/right, top/btm]
@@ -57,18 +57,25 @@ public class Game : SerializedMonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
+    private void Awake () {
         current = this;
-        TileDictionary = myDictionary.TileDictionary;
+        //TileDictionary = myDictionary.TileDictionary;
         ProjectileDictionary = myDictionary.ProjectileDictionary;
         tiles = new GameObject[gridWidth, gridHeight];
         gameHolder = GameObject.Find("GameHolder").transform;
+
+        GameObject[] allTiles = Resources.LoadAll<GameObject>(string.Format("{0}", folderName));
+
+        foreach(GameObject tile in allTiles) {
+            TileDictionary[tile.name] = tile;
+        }
+        //string.Format("{0}/{1}/{2}", folderName, tileType.name, tile.name);
 
         returnToMainMenu.onClick.AddListener(BackToMenu);
     }
 	
 	// Update is called once per frame
-	void Update () {
+	private void Update () {
 		if (Input.GetKeyDown(KeyCode.Escape) && started && !LevelController.isDialogueOpen) {
             if (pauseMenuGroup.gameObject.activeSelf) {
                 HidePauseMenu();
@@ -77,6 +84,19 @@ public class Game : SerializedMonoBehaviour {
             }
         }
 	}
+
+    public static void WinGame() {
+        started = false;
+
+        // Progress logic heres
+        if (Main.mapLevel + 1 > Main.playerProgress.level) {
+            Main.playerProgress.level += 1;
+            Main.mapLevel = Main.playerProgress.level;
+            Main.SaveProgress();
+        }
+
+        current.BackToMenu();
+    }
 
     public static void PauseGame() {
         paused = true;
@@ -135,10 +155,10 @@ public class Game : SerializedMonoBehaviour {
         main.ShowMenu();
     }
 
-    public GameObject AddTile(string type, Vector3 position, float rotation = 0f) {
-        GameObject tile = Instantiate(Resources.Load<GameObject>(string.Format("{0}/{1}", folderName, type)));
+    public GameObject AddTile(string tileName, Vector3 position, float rotation = 0f) {
+        GameObject tile = Instantiate(TileDictionary[tileName]);
 
-        tile.name = type;
+        tile.name = tileName;
         tile.transform.position = position;
         tile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
         tile.transform.SetParent(gameHolder.transform);
@@ -255,7 +275,7 @@ public class Game : SerializedMonoBehaviour {
             for (int y = 0; y < gridHeight; y++) {
                 GameObject tile;
                 Vector3 pos = new Vector3(x, y, 0);
-
+                
                 // Creating the tile
                 if (x == 0 || x == gridWidth - 1 || y == 0 || y == gridHeight - 1) {
                     tile = AddTile("OuterWall", pos);

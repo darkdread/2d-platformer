@@ -61,8 +61,9 @@ public class Player : MonoBehaviour, IDamageableObject {
         rb = GetComponent<Rigidbody2D>();
         myAnim = GetComponent<Animator>();
         gameController = FindObjectOfType<Game>();
-        
-        
+
+        skillImage[0] = GameObject.Find("Skill1Cooldown");
+
         // Reset cooldown
         foreach(GameObject obj in skillImage) {
             Image image = obj.GetComponent<Image>();
@@ -138,15 +139,25 @@ public class Player : MonoBehaviour, IDamageableObject {
                 Vector3 projectilePos = playerFront.position;
                 Projectile projectile = LevelController.CreateProjectileTowardsDirection(gameController.ProjectileDictionary["kunai"], projectilePos, projectilePos + transform.localScale.x * Vector3.right * 2);
                 LevelController.SetProjectileEnemyAgainst(projectile, "Enemy");
-                projectile.transform.parent = Game.gameHolder;
             }
 
-            for(int i = 0; i < skillImage.Length; i++) {
-                Image image = skillImage[i].GetComponent<Image>();
+            // If the player reflects a projectile
+            if (Input.GetKeyDown(KeyCode.F)) {
+                Vector3 projectilePos = playerFront.position;
+                Collider2D collider = Physics2D.OverlapCircle(projectilePos, 1f);
 
-                if (image.fillAmount < 1) {
-                    image.fillAmount += 1 / skillCooldown[i] * Time.deltaTime;
+                if (collider) {
+                    Projectile projectile = collider.gameObject.GetComponent<Projectile>();
+
+                    if (projectile && projectile.IsEnemyOf("Player")) {
+                        projectile.Reflect();
+                    }
                 }
+            }
+
+            // Player's skills
+            for (int i = 0; i < skillImage.Length; i++) {
+                Image image = skillImage[i].GetComponent<Image>();
 
                 // If the player uses skill 1
                 if (image.fillAmount >= 1) {
@@ -156,7 +167,6 @@ public class Player : MonoBehaviour, IDamageableObject {
                         Vector3 projectilePos = playerFront.position;
                         Projectile projectile = LevelController.CreateProjectileTowardsDirection(gameController.ProjectileDictionary["shuriken"], projectilePos, projectilePos + transform.localScale.x * Vector3.right * 2);
                         LevelController.SetProjectileEnemyAgainst(projectile, "Enemy");
-                        projectile.transform.parent = Game.gameHolder;
                     }
                 }
             }
@@ -168,10 +178,18 @@ public class Player : MonoBehaviour, IDamageableObject {
             knockbackTimer -= Time.deltaTime;
         }
 
-        //setting variables for animator so the animator knows what state to animate
-        //myAnim.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
-        //myAnim.SetBool("Ground", isGrounded);
-    }
+        for (int i = 0; i < skillImage.Length; i++) {
+            Image image = skillImage[i].GetComponent<Image>();
+
+            if (image.fillAmount < 1) {
+                image.fillAmount += 1 / skillCooldown[i] * Time.deltaTime;
+            }
+        }
+
+            //setting variables for animator so the animator knows what state to animate
+            //myAnim.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
+            //myAnim.SetBool("Ground", isGrounded);
+        }
 
     //allows other classes to make the player jump
     public void Jump(float speed = defaultJumpSpeed) {
@@ -193,10 +211,12 @@ public class Player : MonoBehaviour, IDamageableObject {
             knockbackTimer = knockbackLength;
 
             // If the new knockback force is greater than the current knockback force, we replace the force with the greater one.
-            float newX = force.x > rb.velocity.x ? force.x : rb.velocity.x;
-            float newY = force.y > rb.velocity.y ? force.y : rb.velocity.y;
 
-            rb.velocity = new Vector2(newX, newY);
+            float newX = Mathf.Abs(force.x) >= Mathf.Abs(rb.velocity.x) ? force.x : rb.velocity.x;
+            float newY = Mathf.Abs(force.y) >= Mathf.Abs(rb.velocity.y) ? force.y : rb.velocity.y;
+
+            rb.AddForce(force, ForceMode2D.Impulse);
+            //rb.velocity = new Vector2(newX, newY);
         }
     }
 
@@ -227,6 +247,11 @@ public class Player : MonoBehaviour, IDamageableObject {
             DialogueScript.ChangeDialogueText(speaker.dialogueNumber, speaker.dialogueText);
 
             speaker.spoken = true;
+        } else if (collision.CompareTag("Win")) {
+            // Win Screen
+
+            // After Win Screen back to menu?
+            Game.WinGame();
         }
     }
 }

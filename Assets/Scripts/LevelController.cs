@@ -7,20 +7,18 @@ public class LevelController : MonoBehaviour {
 
     public static LevelController current;
 
-    public static Canvas userInterface;
-    public static CanvasGroup userInterfaceGroup;
-    public static CanvasGroup onPlayerHitCanvasGroup;
+    public Canvas userInterface;
+    public CanvasGroup userInterfaceGroup;
+    public CanvasGroup onPlayerHitCanvasGroup;
 
     public static bool isDialogueOpen;
-    public static Image dialogueImage;
+    public Image dialogueImage;
 
     private void Awake() {
         current = this;
         
-        userInterface = GameObject.Find("User Interface").GetComponent<Canvas>();
-        userInterfaceGroup = userInterface.GetComponent<CanvasGroup>();
-        onPlayerHitCanvasGroup = GameObject.Find("On Player Hit").GetComponent<CanvasGroup>();
-        dialogueImage = GameObject.Find("Dialogue Box").GetComponent<Image>();
+        
+        
 
         dialogueImage.gameObject.SetActive(false);
     }
@@ -36,13 +34,31 @@ public class LevelController : MonoBehaviour {
         GameObject projectile = Instantiate<GameObject>(type, position, Quaternion.identity);
         Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
         Projectile projectileComp = projectile.GetComponent<Projectile>();
-        float force = projectileComp.projectileData.force;
+        float force = projectileComp.projectileData.speed;
         Vector3 heading = targetPosition - position;
         float distance = heading.magnitude;
         Vector3 direction = heading / distance;
 
-        projectile.transform.localScale = new Vector3(direction.x, 1, 1);
+        // local scale z is 0 to detect that it is created with localscale.x
+        projectile.transform.localScale = new Vector3(direction.x, 1, 0);
         projectileRb.AddForce(direction * force, ForceMode2D.Impulse);
+        projectile.transform.SetParent(Game.gameHolder);
+
+        return projectileComp;
+    }
+
+    public static Projectile CreateProjectileTowardsAngle(GameObject type, Vector3 position, Vector3 targetPosition, float angle) {
+        GameObject projectile = Instantiate<GameObject>(type, position, Quaternion.Euler(new Vector3(0, 0, angle)));
+        Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
+        Projectile projectileComp = projectile.GetComponent<Projectile>();
+        float force = projectileComp.projectileData.speed;
+        Vector3 heading = targetPosition - position;
+        float distance = heading.magnitude;
+        Vector3 direction = heading / distance;
+        
+        projectile.transform.localScale = new Vector3(1, 1, 1);
+        projectileRb.AddForce(direction * force, ForceMode2D.Impulse);
+        projectile.transform.SetParent(Game.gameHolder);
 
         return projectileComp;
     }
@@ -57,22 +73,22 @@ public class LevelController : MonoBehaviour {
 
     public static void ShowDialogue() {
         isDialogueOpen = true;
-        dialogueImage.gameObject.SetActive(true);
+        current.dialogueImage.gameObject.SetActive(true);
 
         Game.PauseGame();
     }
 
     public static void HideDialogue() {
         isDialogueOpen = false;
-        dialogueImage.gameObject.SetActive(false);
+        current.dialogueImage.gameObject.SetActive(false);
 
         Game.ResumeGame();
     }
 
     public static void FlashScreen() {
-        onPlayerHitCanvasGroup.alpha = 1;
+        current.onPlayerHitCanvasGroup.alpha = 1;
 
-        current.StartCoroutine(StartFade(onPlayerHitCanvasGroup, 1));
+        current.StartCoroutine(StartFade(current.onPlayerHitCanvasGroup, 1));
     }
 
     static IEnumerator StartFade(CanvasGroup cg, float time) {

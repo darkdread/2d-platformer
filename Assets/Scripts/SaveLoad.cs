@@ -90,7 +90,7 @@ public static class SaveLoad {
             fileName
         ));
 
-        Progress progress = new Progress(1);
+        Progress progress = Main.playerProgress;
 
         string json = JsonUtility.ToJson(progress);
 
