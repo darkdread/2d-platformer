@@ -9,6 +9,8 @@ public class Tile : ScriptableObject {
     public Vector2 size;
     [Tooltip("What color the sprite will be when hovered over.")]
     public Color hoverColor = Color.red;
+    [Tooltip("What texture is the tile, is it grass?")]
+    public string texture = "None";
 
     /*public Tile(GameObject _type) {
         type = _type;
