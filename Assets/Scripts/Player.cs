@@ -109,6 +109,7 @@ public class Player : MonoBehaviour, IDamageableObject {
         //HorizontalCollisions(horizontalCollision);
 
         Vector2 verticalCollision = new Vector2(0, -0.5f);
+        //VerticalCollisions(verticalCollision);
 
         //check if the player is on the ground.
         foreach (LayerMask mask in realGround) {
@@ -166,9 +167,10 @@ public class Player : MonoBehaviour, IDamageableObject {
             }
 
             //if the player presses the jump key and is on the ground
-            if (Input.GetButtonDown("Jump") && isGrounded) {
-                //the player jumps according to the jump speed.
-                rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+            if (Input.GetButtonDown("Jump") && isGrounded && transform.rotation.z == 0) {
+                // The player jumps according to the jump speed.
+                Jump(jumpSpeed);
+
                 JumpEvent.Invoke();
             }
 
@@ -353,7 +355,9 @@ public class Player : MonoBehaviour, IDamageableObject {
 
     bool VerticalCollisions(Vector3 velocity) {
         float directionY = Mathf.Sign(velocity.y);
-        float rayLength = Mathf.Abs(velocity.y) + skinWidth;
+        float rayLength = Mathf.Abs(velocity.y) + skinWidth + 1f;
+        bool leftSensorIsEqual = false;
+        float[] slopeAngles = new float[verticalRayCount];
 
         for (int i = 0; i < verticalRayCount; i++) {
             Vector2 rayOrigin = (directionY == -1) ? raycastOrigins.bottomLeft : raycastOrigins.topLeft;
@@ -364,35 +368,173 @@ public class Player : MonoBehaviour, IDamageableObject {
 
             RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, realGround[0]);
 
-            print(i * (raycastOrigins.bottomRight.y - raycastOrigins.bottomLeft.y)/ (verticalRayCount - 1));
+            //print(i * (raycastOrigins.bottomRight.y - raycastOrigins.bottomLeft.y)/ (verticalRayCount - 1));
 
             Debug.DrawRay(rayOrigin, Vector2.up * directionY * rayLength, Color.red);
 
             if (hit) {
+
+                return true;
+                
                 //velocity.y = (hit.distance - skinWidth) * directionY;
 
                 //rayLength = hit.distance;
 
+                /*
                 float playerMove = Input.GetAxisRaw("Horizontal");
+                float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
+
+                float playerAngle = transform.rotation.eulerAngles.z;
+                playerAngle = (playerAngle > 180) ? 360 - playerAngle : playerAngle;
+
+                playerAngle = Mathf.Floor(playerAngle * 1) / 1;
+                slopeAngle = Mathf.Floor(slopeAngle * 1) / 1;
+                slopeAngles[i] = slopeAngle;
+
+                bool isEqual = playerAngle == slopeAngle;
+
+                float rotateDegree;
+
+                if (isEqual && i == 0) {
+                    leftSensorIsEqual = true;
+                }
+
                 
-                // If player is facing right
+                // Rotate algorithm -> If the player is facing right, and when he is climbing up, eulerZ is positive. If climbing down, eulerZ is negative. Vice-versa for the other side.
+                // However, if the player is facing right, but not moving, gravity may pull player down. In that case, the velocity is reversed.
+                rotateDegree = (rb.velocity.y > 0) ? slopeAngle * transform.localScale.x : slopeAngle * -transform.localScale.x;
+
+                // Make sure it is the right most ray.
+                if (i == verticalRayCount - 1) {
+
+                    // Check if the player is moving or not. If player isn't moving, don't change.
+                    if (playerMove == 0) {
+
+                    } else {
+                        // First off, assume that the player is just starting to climb a slope 45 deg to the right. We want to adjust the player's rotation first.
+                        // After the player is about to finish climbing, and the right-most ray is not equal to the left-most ray, then we wait until the left-most ray is equal.
+                        print(string.Format("Left-most: {0}, right-most: {1}, player: {2}", slopeAngles[0], slopeAngle, playerAngle));
+
+                        if (!leftSensorIsEqual && !isEqual) {
+                            // Left-most ray and right-most ray is not equal to the player
+                            //print("case 1");
+                            transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotateDegree));
+
+                        } else if (leftSensorIsEqual && !isEqual) {
+                            // Left-most ray angle is equal to player's angle, but right-most ray isn't.
+                            print("case 2");
+
+                            // If facing right side
+                            if (transform.localScale.x > 0) {
+                                // If the player's angle is < the slope's angle, that means the player is climbing up.
+                                if (playerAngle < slopeAngle) {
+                                    print("1");
+                                    rotateDegree = (rb.velocity.y > 0) ? slopeAngle * transform.localScale.x : slopeAngle * -transform.localScale.x;
+                                } else {
+                                    print(string.Format("Left-most: {0}, right-most: {1}, player: {2}", slopeAngles[0], slopeAngle, playerAngle));
+                                    rotateDegree = (rb.velocity.y > 0) ? slopeAngles[0] * transform.localScale.x : slopeAngles[0] * -transform.localScale.x;
+                                }
+
+                                transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotateDegree));
+                            }
+
+                        } else if (!leftSensorIsEqual && isEqual) {
+                            // Left-most ray angle is not equal to player's angle, but right-most ray is.
+                            print("case 3");
+
+                            // If facing left side
+                            if (transform.localScale.x < 0) {
+                                
+                                rotateDegree = (rb.velocity.y > 0) ? slopeAngles[0] * transform.localScale.x : slopeAngles[0] * -transform.localScale.x;
+                            } else {
+                                // Facing right side
+                                print("FRS");
+                                rotateDegree = (rb.velocity.y > 0) ? slopeAngle * transform.localScale.x : slopeAngle * transform.localScale.x;
+                            }
+                            print(rotateDegree);
+                            transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotateDegree));
+
+                        } else if (leftSensorIsEqual && isEqual) {
+                            // Left-most ray and right-most ray is equal to the player, nothing to change here
+                            //print("case 4");
+
+                        }
+
+                    }
+
+                }
+
+                */
+                /*
 
                 if (transform.localScale.x > 0) {
-                    // Left-most ray
+                    // Rays start from the left.
+                    // For each ray, compare if the player angle is equal to the slope angle.
+                    // If the first ray is equal, then we set the left-most sensor to true.
+                    // If going up, eulerZ should be positive
 
-                    if (i == 0) {
-                        float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
+                    if (isEqual) {
 
-                        // If going up
-                        float rotateDegree = (rb.velocity.y > 0) ? slopeAngle : -slopeAngle;
-                        transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotateDegree));
+                    } else {
+                        // Right ray sensor is not equal to the new terrain's angle.
+                        // Compare if the ray's sensor is the same as left sensor.
+                        // If the right most sensor is the same as the left most sensor, the player is in a slope.
+                        // If the right most sensor is not the same, the player's right side is flat
+
+                        if (i == verticalRayCount - 1) {
+
+                            if (leftSensorIsEqual && playerAngle <= 1) {
+                                print("left and right most is equal");
+                                rotateDegree = (rb.velocity.y > 0) ? slopeAngle : -slopeAngle;
+                                transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotateDegree));
+                            } else if (!leftSensorIsEqual) {
+                                print("left and right most is not equal");
+                                print(slopeAngle);
+                                rotateDegree = (rb.velocity.y > 0) ? slopeAngle : slopeAngle;
+                                transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotateDegree));
+                            }
+
+                            return true;
+                        }
+                    }
+                } else if (transform.localScale.x < 0) {
+
+                    
+                    // Right ray sensor is not equal to the new terrain's angle.
+                    // Compare if the ray's sensor is the same as left sensor.
+                    // If the right most sensor is the same as the left most sensor, the player is in a slope.
+                    // If the right most sensor is not the same, the player's right side is flat
+                    
+
+                    if (i == verticalRayCount - 1) {
+                        // If going up, eulerZ should be positive
+
+                        if (isEqual) {
+                            if (leftSensorIsEqual && playerAngle <= 1) {
+                                //print("left & right most is equal");
+                                rotateDegree = (rb.velocity.y < 0) ? slopeAngle : -slopeAngle;
+                                transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotateDegree));
+                            }
+                        } else {
+                            if (!leftSensorIsEqual) {
+                                //print("left and right most is not equal");
+                                rotateDegree = (rb.velocity.y < 0) ? slopeAngle : -slopeAngles[0];
+                                transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotateDegree));
+                            }
+                        }
 
                         return true;
                     }
-                } else if (transform.localScale.x < 0) {
-                    // Right-most ray
+                    
+                     if (rb.velocity.x < 0 && i == verticalRayCount - 1) {
+                        float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
 
-                    if (i == verticalRayCount - 1) {
+                        float rotateDegree = (rb.velocity.y < 0) ? slopeAngle : -slopeAngle;
+                        transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotateDegree));
+
+                        return true;
+
+                    } else if (rb.velocity.x == 0 && transform.rotation.z != 0 && i == 0) {
                         float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
 
                         float rotateDegree = (rb.velocity.y < 0) ? slopeAngle : -slopeAngle;
@@ -400,21 +542,9 @@ public class Player : MonoBehaviour, IDamageableObject {
 
                         return true;
                     }
-                } else {
-
-                    if (i == 2) {
-                        float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
-
-                        // If going up
-
-                        float rotateDegree = (rb.velocity.y > 0) ? slopeAngle : -slopeAngle;
-                        transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotateDegree));
-
-                        return true;
-                    }
-                }
-
+                    */
             }
+            
         }
         return false;
     }
