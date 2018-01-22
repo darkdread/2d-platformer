@@ -19,7 +19,7 @@ public class Game : SerializedMonoBehaviour {
     public Main main;
 
     public CanvasGroup pauseMenuGroup;
-    public Button returnToMainMenu;
+    public Button mainMenuBtn, resumeGameBtn, settingsBtn;
 
     public LevelController levelController;
     public MyDictionary myDictionary;
@@ -29,7 +29,7 @@ public class Game : SerializedMonoBehaviour {
     //size is +2 because of outer walls [left/right, top/btm]
     public static int gridWidth = 128+2;
     public static int gridHeight = 64+2;
-    public static GameObject player;
+    public static Player player;
     public static Transform gameHolder;
     public CameraController cameraController;
 
@@ -71,7 +71,9 @@ public class Game : SerializedMonoBehaviour {
         }
         //string.Format("{0}/{1}/{2}", folderName, tileType.name, tile.name);
 
-        returnToMainMenu.onClick.AddListener(BackToMenu);
+        mainMenuBtn.onClick.AddListener(BackToMenu);
+        resumeGameBtn.onClick.AddListener(current.HidePauseMenu);
+        settingsBtn.onClick.AddListener(Main.ShowSettings);
     }
 	
 	// Update is called once per frame
@@ -115,6 +117,7 @@ public class Game : SerializedMonoBehaviour {
             }
         }
 
+        player.particleSys.Pause();
         PausableRigidbody2D.PauseRigidbody(player.GetComponent<Rigidbody2D>());
     }
 
@@ -135,6 +138,7 @@ public class Game : SerializedMonoBehaviour {
             }
         }
 
+        player.particleSys.Play();
         PausableRigidbody2D.ResumeRigidbody(player.GetComponent<Rigidbody2D>());
     }
 
@@ -152,7 +156,7 @@ public class Game : SerializedMonoBehaviour {
         ClearMap();
         HidePauseMenu();
         LevelController.HideDialogue();
-        main.ShowMenu();
+        Main.ShowMenu();
     }
 
     public GameObject AddTile(string tileName, Vector3 position, float rotation = 0f) {
@@ -164,7 +168,7 @@ public class Game : SerializedMonoBehaviour {
         tile.transform.SetParent(gameHolder.transform);
 
         if (tile.GetComponent<Player>()) {
-            player = tile;
+            player = tile.GetComponent<Player>();
         }
         
         // Disable the tile from moving & make tile editable.
@@ -296,7 +300,7 @@ public class Game : SerializedMonoBehaviour {
     }
 
     public void GenerateMapFromJson(string json) {
-        GameData gameData = JsonUtility.FromJson<GameData>(json);
+        MapData gameData = JsonUtility.FromJson<MapData>(json);
         GameObjectInScene[] tileArray = new GameObjectInScene[gameData.mapWidth * gameData.mapHeight];
         GameObjectInScene[] tileData = gameData.tiles;
 

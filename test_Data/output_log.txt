@@ -23,9 +23,42 @@ Platform assembly: E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\
 Loading E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\Sirenix.Serialization.dll into Unity Child Domain
 Platform assembly: E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\Sirenix.Utilities.dll (this message is harmless)
 Loading E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\Sirenix.Utilities.dll into Unity Child Domain
-- Completed reload, in  0.039 seconds
+- Completed reload, in  0.209 seconds
 Platform assembly: E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 144Hz; virtual: 1920x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
+<RI> Initialized touch support.
+Platform assembly: E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\Mono.Security.dll (this message is harmless)
+Platform assembly: E:\My things\My Work 2\Fuck Singapore Poly legit\DGDD Studio\GP\DGDDS T4 2D Platformer\test_Data\Managed\System.Xml.dll (this message is harmless)
+UnloadTime: 0.927979 ms
+Polygon Count: 611, Polygon Points Count: 2452
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+UnitedPolygon Count: 12, UnitedPolygon Points Count: 66
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Polygon Count: 626, Polygon Points Count: 2527
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+UnitedPolygon Count: 2, UnitedPolygon Points Count: 53
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Polygon Count: 626, Polygon Points Count: 2527
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+UnitedPolygon Count: 2, UnitedPolygon Points Count: 53
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Setting up 4 worker threads for Enlighten.
+  Thread -> id: 1b34 -> priority: 1 
+  Thread -> id: 21ac -> priority: 1 
+  Thread -> id: 370c -> priority: 1 
+  Thread -> id: 4204 -> priority: 1 

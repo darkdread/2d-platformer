@@ -55,7 +55,7 @@ public class Player : MonoBehaviour, IDamageableObject {
     public Rigidbody2D rb;
 
     // Ground movement effects
-    public ParticleSystem particleSystem;
+    public ParticleSystem particleSys;
     private bool isParticleSystemPlaying;
     private bool justGrounded;
 
@@ -139,7 +139,7 @@ public class Player : MonoBehaviour, IDamageableObject {
         // Stop particles from emitting if the player stopped running || started jumping
         if (isParticleSystemPlaying) {
             if (rb.velocity.x == 0 || !isGrounded) {
-                particleSystem.Stop();
+                particleSys.Stop();
                 isParticleSystemPlaying = false;
             }
         }
@@ -184,13 +184,16 @@ public class Player : MonoBehaviour, IDamageableObject {
             // If the player reflects a projectile
             if (Input.GetKeyDown(KeyCode.F)) {
                 Vector3 projectilePos = playerFront.position;
-                Collider2D collider = Physics2D.OverlapCircle(projectilePos, 1f);
+                Collider2D[] collidedProjectiles = Physics2D.OverlapCircleAll(projectilePos, 1f);
 
-                if (collider) {
+                foreach (Collider2D collider in collidedProjectiles) {
                     Projectile projectile = collider.gameObject.GetComponent<Projectile>();
 
-                    if (projectile && projectile.IsEnemyOf("Player")) {
-                        projectile.Reflect();
+                    if (projectile) {
+                        
+                        if (projectile && projectile.IsEnemyOf("Player")) {
+                            projectile.Reflect();
+                        }
                     }
                 }
             }
@@ -233,8 +236,8 @@ public class Player : MonoBehaviour, IDamageableObject {
 
     private void LateUpdate() {
 
-        ParticleSystem.Particle[] particles = new ParticleSystem.Particle[particleSystem.particleCount];
-        int count = particleSystem.GetParticles(particles);
+        ParticleSystem.Particle[] particles = new ParticleSystem.Particle[particleSys.particleCount];
+        int count = particleSys.GetParticles(particles);
         for (int i = 0; i < count; i++) {
 
             // Get newly created particles and set their velocity, because the particle system is a bitch to deal with.
@@ -246,7 +249,7 @@ public class Player : MonoBehaviour, IDamageableObject {
             }
         }
 
-        particleSystem.SetParticles(particles, count);
+        particleSys.SetParticles(particles, count);
     }
 
 
@@ -261,10 +264,10 @@ public class Player : MonoBehaviour, IDamageableObject {
 
         if (!isParticleSystemPlaying) {
             if (Mathf.Abs(rb.velocity.x) > 0) {
-                particleSystem.Play();
+                particleSys.Play();
                 isParticleSystemPlaying = true;
             } else if (justGrounded) {
-                particleSystem.Emit(1);
+                particleSys.Emit(1);
                 justGrounded = false;
             }
         }

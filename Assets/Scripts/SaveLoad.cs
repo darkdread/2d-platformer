@@ -30,7 +30,7 @@ public static class SaveLoad {
         // The GameObjectInScene will store its position, rotation, name and scale.
         // After storing them into GameData, we will serialize GameData into a Json string. Stream the Json string into a folder.
 
-        GameData gameData = new GameData() {
+        MapData gameData = new MapData() {
             mapWidth = Game.gridWidth,
             mapHeight = Game.gridHeight
         };
@@ -90,9 +90,9 @@ public static class SaveLoad {
             fileName
         ));
 
-        Progress progress = Main.playerProgress;
+        GameData data = Main.playerProgress;
 
-        string json = JsonUtility.ToJson(progress);
+        string json = JsonUtility.ToJson(data);
 
         bf.Serialize(file, json);
         file.Close();

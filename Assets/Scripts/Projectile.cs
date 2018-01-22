@@ -54,6 +54,7 @@ public class Projectile : MonoBehaviour {
         despawnTimer = despawnTimerInitial;
 
         Vector2 moveVel = new Vector2(-rb.velocity.x, -rb.velocity.y);
+        //moveVel = Vector2.Reflect(rb.velocity, Vector2.left);
 
         transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
         rb.velocity = moveVel;

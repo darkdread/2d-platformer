@@ -355,7 +355,7 @@ public class Editor : MonoBehaviour {
         GameController.ClearMap();
 
         HideMenu();
-        MainController.GetComponent<Main>().ShowMenu();
+        Main.ShowMenu();
     }
 
 }

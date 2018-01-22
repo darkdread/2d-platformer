@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Main : MonoBehaviour {
+
+    public static Main current;
 
     public CameraController cameraController;
     public Game GameController;
@@ -13,20 +16,27 @@ public class Main : MonoBehaviour {
 
     public GameObject[] backgrounds;
     public Transform cooldownHolder;
-    public CanvasGroup mainMenu;
+    public CanvasGroup mainMenu, settingsMenu;
     public Canvas levelSelection;
     public Button chapter0, chapter1, chapter2, chapter3;
 
     public Button playBtn;
     public Button editBtn;
-    public Button settingsBtn;
+    public Button settingsBtn, settingsBackBtn;
     public Button exitBtn;
 
+    public Button vSyncLeftBtn, vSyncRightBtn;
+    public Text vSyncValue;
+
+    public Slider frameSlider;
+    public Text frameText;
+
     public static int mapLevel;
-    public static Progress playerProgress;
+    public static GameData playerProgress;
     public CanvasGroup[] chapterGroup;
 
     private static bool editorMode;
+    public static Settings settings;
 
     public static bool EditorMode {
         get {
@@ -34,15 +44,49 @@ public class Main : MonoBehaviour {
         }
     }
 
+    public static void SetVSync(int value) {
+        value = (value < 0) ? 0 : (value > 1) ? 1 : value;
+        // No sync
+        if (value == 0) {
+            QualitySettings.vSyncCount = 0;
+            current.vSyncValue.text = "OFF";
+        } else if (value >= 1) {
+            QualitySettings.vSyncCount = value;
+            current.vSyncValue.text = "ON";
+        }
+
+        settings.vSync = value;
+    }
+
+    public static void SetFramerate(int value) {
+        value = (value < 10) ? 10 : (value > 180) ? 180 : value;
+
+        current.frameText.text = value.ToString();
+        Application.targetFrameRate = value;
+        settings.frameRate = value;
+    }
+
     // Use this for initialization
     private void Awake() {
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 60;
+        current = this;
 
         playBtn.onClick.AddListener(ShowLevelSelectionScreen);
         editBtn.onClick.AddListener(EditMode);
-        settingsBtn.onClick.AddListener(GoToSettings);
+        settingsBtn.onClick.AddListener(ShowSettings);
+        settingsBackBtn.onClick.AddListener(HideSettings);
         exitBtn.onClick.AddListener(ExitToDesktop);
+
+        frameSlider.onValueChanged.AddListener(delegate {
+            SetFramerate((int)frameSlider.value);
+        });
+
+        vSyncLeftBtn.onClick.AddListener(delegate{
+            SetVSync(settings.vSync - 1);
+        });
+
+        vSyncRightBtn.onClick.AddListener(delegate {
+            SetVSync(settings.vSync + 1);
+        });
 
         chapter0.onClick.AddListener(delegate () {
             StartGame("level00");
@@ -65,12 +109,14 @@ public class Main : MonoBehaviour {
 
         //SaveProgress();
         if (!LoadProgress()) {
-            playerProgress = new Progress(0);
+            settings = new Settings();
+            playerProgress = new GameData(0);
         }
 
         UpdateLevelScreen();
-
+        
         ShowMenu();
+        HideSettings();
     }
 
     public static void SaveProgress() {
@@ -81,48 +127,51 @@ public class Main : MonoBehaviour {
         string json = SaveLoad.LoadProgress("test");
         if (json == null) return false;
 
-        Progress progress = JsonUtility.FromJson<Progress>(json);
-
+        GameData progress = JsonUtility.FromJson<GameData>(json);
+        
         playerProgress = progress;
+        settings = progress.settings;
+        SetFramerate(progress.settings.frameRate);
+        SetVSync(progress.settings.vSync);
 
         return true;
     }
 
-    public void HideBackground() {
-        foreach (GameObject background in backgrounds) {
+    public static void HideBackground() {
+        foreach (GameObject background in current.backgrounds) {
             background.SetActive(false);
         }
     }
 
-    public void ShowBackground() {
-        foreach (GameObject background in backgrounds) {
+    public static void ShowBackground() {
+        foreach (GameObject background in current.backgrounds) {
             background.SetActive(true);
         }
     }
 
     //hide main menu
-    public void HideMenu() {
-        mainMenu.gameObject.SetActive(false);
+    public static void HideMenu() {
+        current.mainMenu.gameObject.SetActive(false);
     }
 
-    public void UpdateLevelScreen() {
+    public static void UpdateLevelScreen() {
 
-        for (int i = 0; i < chapterGroup.Length; i++) {
+        for (int i = 0; i < current.chapterGroup.Length; i++) {
             if (playerProgress.level >= i) {
-                chapterGroup[i].alpha = 1;
+                current.chapterGroup[i].alpha = 1;
             } else {
-                chapterGroup[i].alpha = 0.3f;
+                current.chapterGroup[i].alpha = 0.3f;
             }
         }
     }
 
     //show main menu
-    public void ShowMenu() {
+    public static void ShowMenu() {
         editorMode = false;
 
         UpdateLevelScreen();
-        cooldownHolder.gameObject.SetActive(false);
-        mainMenu.gameObject.SetActive(true);
+        current.cooldownHolder.gameObject.SetActive(false);
+        current.mainMenu.gameObject.SetActive(true);
         HideBackground();
     }
 
@@ -216,12 +265,31 @@ public class Main : MonoBehaviour {
         return speaker;
     }
 
-    void GoToSettings() {
+    public static void ShowSettings() {
+        HideMenu();
 
+        current.settingsMenu.gameObject.SetActive(true);
+    }
+
+    public static void HideSettings() {
+        current.settingsMenu.gameObject.SetActive(false);
+        SaveProgress();
+
+        if (Game.started) {
+
+        } else {
+            ShowMenu();
+        }
     }
 
     //exit game
     void ExitToDesktop() {
         Application.Quit();
+    }
+
+    [Serializable]
+    public class Settings {
+        public int vSync = 0;
+        public int frameRate = 60;
     }
 }
