@@ -70,7 +70,14 @@ public class Player : MonoBehaviour, IDamageableObject {
     RaycastOrigins raycastOrigins;
     Bounds startingBounds;
 
+    private Animator animator;
+    public float blockSpeedMultiplier;
+    public float damage;
+    private bool isBlocking, isAttacking;
+
     public UnityEvent JumpEvent;
+
+    private float colorDuration;
 
     // Use this for initialization
     private void Start() {
@@ -79,6 +86,7 @@ public class Player : MonoBehaviour, IDamageableObject {
         myAnim = GetComponent<Animator>();
         gameController = FindObjectOfType<Game>();
         playerCollider = GetComponent<BoxCollider2D>();
+        animator = GetComponent<Animator>();
 
         skillImage[0] = GameObject.Find("Skill1Cooldown");
         startingBounds = playerCollider.bounds;
@@ -144,21 +152,35 @@ public class Player : MonoBehaviour, IDamageableObject {
             }
         }
 
+        if (spriteRenderer.color != Color.white && colorDuration <= 0) {
+            spriteRenderer.color = Color.white;
+        } else {
+            colorDuration -= Time.deltaTime;
+        }
+
         //if the player isn't getting knocked backed
         if (knockbackTimer <= 0) {
 
-            if (spriteRenderer.color == Color.red) {
-                spriteRenderer.color = Color.white;
-            }
+            isBlocking = animator.GetCurrentAnimatorStateInfo(0).IsTag("Block");
+            isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack");
+            print(isAttacking);
 
             //if the player is moving left/right
             if (x != 0) {
                 //if the player is moving to the right, set the movement speed to positive. Vice-versa.
                 x = (x > 0) ? moveSpeed : -moveSpeed;
-                //if the player is moving to the right, set the scale to positive. Vice-versa.
-                float scaleX = (x > 0) ? 1 : -1;
-                //scale the player accordingly.
-                transform.localScale = new Vector3(scaleX, transform.localScale.y, transform.localScale.z);
+
+                if (!isBlocking && !isAttacking) {
+                    //if the player is moving to the right, set the scale to positive. Vice-versa.
+                    float scaleX = (x > 0) ? 1 : -1;
+                    //scale the player accordingly.
+                    transform.localScale = new Vector3(scaleX, transform.localScale.y, transform.localScale.z);
+                } else if (isBlocking) {
+                    x *= blockSpeedMultiplier;
+                } else {
+                    x = 0;
+                }
+
                 //move the player according to the movement speed.
                 rb.velocity = new Vector2(x, rb.velocity.y);
             } else {
@@ -167,12 +189,23 @@ public class Player : MonoBehaviour, IDamageableObject {
             }
 
             //if the player presses the jump key and is on the ground
-            if (Input.GetButtonDown("Jump") && isGrounded && transform.rotation.z == 0) {
+            if (Input.GetButtonDown("Jump") && isGrounded && !isBlocking && !isAttacking) {
                 // The player jumps according to the jump speed.
                 Jump(jumpSpeed);
 
                 JumpEvent.Invoke();
             }
+            
+            animator.SetBool("Block", Input.GetButton("Block"));
+
+            if (Input.GetButton("Attack")) {
+                if (!isAttacking) {
+                    int atkAnim = Random.Range(1, 3);
+                    animator.SetInteger("RandAttack", atkAnim);
+                }
+            }
+
+            animator.SetBool("Attack", Input.GetButton("Attack"));
 
             // If the player throws a projectile
             if (Input.GetKeyDown(KeyCode.C)) {
@@ -182,7 +215,7 @@ public class Player : MonoBehaviour, IDamageableObject {
             }
 
             // If the player reflects a projectile
-            if (Input.GetKeyDown(KeyCode.F)) {
+            if (Input.GetKeyDown(KeyCode.G)) {
                 Vector3 projectilePos = playerFront.position;
                 Collider2D[] collidedProjectiles = Physics2D.OverlapCircleAll(projectilePos, 1f);
 
@@ -285,8 +318,7 @@ public class Player : MonoBehaviour, IDamageableObject {
         if (knockbackTimer <= 0) {
             //set the length of the knockback
             knockbackTimer = knockbackLength;
-
-            spriteRenderer.color = Color.red;
+            
             rb.velocity = force;
         } else {
             //set the length of the knockback
@@ -302,6 +334,11 @@ public class Player : MonoBehaviour, IDamageableObject {
         }
     }
 
+    public void SetColorDuration(Color color, float duration) {
+        colorDuration = duration;
+        spriteRenderer.color = color;
+    }
+
     public void DisableMovement(float seconds) {
 
         //if the player is not already getting knocked
@@ -315,6 +352,7 @@ public class Player : MonoBehaviour, IDamageableObject {
     public void TakeDamage(float value) {
         //decrease player's health
         health -= value;
+        SetColorDuration(Color.red, knockbackLength);
 
         LevelController.FlashScreen();
     }

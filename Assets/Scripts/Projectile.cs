@@ -93,15 +93,13 @@ public class Projectile : MonoBehaviour {
         foreach (string tag in enemyList) {
             if (collision.gameObject.CompareTag(tag)) {
                 collided = true;
-
-                Enemy enemy = collision.GetComponent<Enemy>();
-                Player player = collision.GetComponent<Player>();
-                IDamageableObject damageableObject = collision.GetComponent<IDamageableObject>();
+                
+                IDamageableObject damageableObject = collision.GetComponentInParent<IDamageableObject>();
 
                 if (damageableObject != null) {
-                    damageableObject.TakeDamage(projectileData.damage);
-
                     Vector2 knockbackForce;
+
+                    // A local scale z of 0 means it's shot by an object which flips when the object moves. [See LevelController.CreateProjectileTowardsDirection]
                     if (transform.localScale.z == 0) {
                         
                         float directionX = (transform.localScale.x > 0) ? 1 : -1;
@@ -113,8 +111,17 @@ public class Projectile : MonoBehaviour {
                         knockbackForce = transform.up * projectileData.knockbackForce;
                     }
 
-                    damageableObject.Knockback(knockbackForce);
+                    // If the object is blocking, we decrease the force.
+                    // We need to check if the projectile is in the blocking collider.
+                    if (collision.name == "Block") {
+                        damageableObject.Knockback(knockbackForce / 4);
+                    } else {
+                        damageableObject.TakeDamage(projectileData.damage);
+                        damageableObject.Knockback(knockbackForce);
+                    }
                 }
+
+                Destroy(gameObject);
 
                 /*if (enemy) {
                     enemy.TakeDamage(projectileData.damage);
@@ -127,8 +134,6 @@ public class Projectile : MonoBehaviour {
                     Vector2 knockbackForce = new Vector2(projectileData.knockbackForce * directionX, Mathf.Abs(projectileData.knockbackForce));
                     player.Knockback(knockbackForce);
                 }*/
-
-                Destroy(gameObject);
             }
         }
     }

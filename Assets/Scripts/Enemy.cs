@@ -18,10 +18,22 @@ public class Enemy : MonoBehaviour, IDamageableObject {
     private float lastEnemyX;
     private float attackTimer;
 
+    private bool isBlocking;
+
     // How long the knockback lasts
     public float knockbackLength = 0.5f;
     // The amount of time to trigger knockback again
     private float knockbackTimer;
+
+    public bool IsBlocking {
+        get {
+            return isBlocking;
+        }
+
+        set {
+            isBlocking = value;
+        }
+    }
 
     // Use this for initialization
     private void Start () {
