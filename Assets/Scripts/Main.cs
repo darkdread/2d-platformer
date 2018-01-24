@@ -62,6 +62,7 @@ public class Main : MonoBehaviour {
         value = (value < 10) ? 10 : (value > 180) ? 180 : value;
 
         current.frameText.text = value.ToString();
+        current.frameSlider.value = value;
         Application.targetFrameRate = value;
         settings.frameRate = value;
     }
