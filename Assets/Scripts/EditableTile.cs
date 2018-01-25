@@ -7,10 +7,12 @@ public class EditableTile : MonoBehaviour {
 
     public Tile tile;
     public SpriteRenderer spriteRenderer;
+    public Color defaultColor;
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        defaultColor = spriteRenderer.color;
     }
 	
     private void OnMouseOver() {
@@ -21,7 +23,7 @@ public class EditableTile : MonoBehaviour {
 
     private void OnMouseExit() {
         if (tile.IsEditable()) {
-            spriteRenderer.color = Color.white;
+            spriteRenderer.color = defaultColor;
         }
     }
 }

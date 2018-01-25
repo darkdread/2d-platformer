@@ -7,6 +7,7 @@ public class Projectile : MonoBehaviour {
     public ProjectileObject projectileData;
 
     public static List<GameObject> list = new List<GameObject>();
+    public float damage;
     private static float despawnTimerInitial = 5;
 
     private List<string> enemyList = new List<string>();
@@ -116,7 +117,11 @@ public class Projectile : MonoBehaviour {
                     if (collision.name == "Block") {
                         damageableObject.Knockback(knockbackForce / 4);
                     } else {
-                        damageableObject.TakeDamage(projectileData.damage);
+                        if (damage != 0)
+                            damageableObject.TakeDamage(damage);
+                        else
+                            damageableObject.TakeDamage(projectileData.damage);
+
                         damageableObject.Knockback(knockbackForce);
                     }
                 }

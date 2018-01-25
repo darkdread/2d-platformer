@@ -163,7 +163,6 @@ public class Player : MonoBehaviour, IDamageableObject {
 
             isBlocking = animator.GetCurrentAnimatorStateInfo(0).IsTag("Block");
             isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack");
-            print(isAttacking);
 
             //if the player is moving left/right
             if (x != 0) {

@@ -104,6 +104,7 @@ public class Editor : MonoBehaviour {
             button.name = t.name;
             button.transform.localScale = Vector3.one;
             button.GetComponent<Image>().sprite = t.GetComponent<SpriteRenderer>().sprite;
+            button.GetComponent<Image>().color = t.GetComponent<SpriteRenderer>().color;
             button.GetComponent<RectTransform>().localPosition = new Vector3(xPos, yPos, 0);
             button.GetComponent<Button>().onClick.AddListener(OnClickTile);
         }
@@ -236,10 +237,13 @@ public class Editor : MonoBehaviour {
 
     // Change selected tile
     private void SelectTile(GameObject tile) {
-        if (tile.GetComponent<Image>())
+        if (tile.GetComponent<Image>()) {
             currentTileBtn.GetComponent<Image>().sprite = tile.GetComponent<Image>().sprite;
-        else
+            currentTileBtn.GetComponent<Image>().color = tile.GetComponent<Image>().color;
+        } else {
             currentTileBtn.GetComponent<Image>().sprite = tile.GetComponent<SpriteRenderer>().sprite;
+            currentTileBtn.GetComponent<Image>().color = tile.GetComponent<SpriteRenderer>().color;
+        }
 
         selectedTile = Game.TileDictionary[tile.name];
     }
@@ -315,6 +319,8 @@ public class Editor : MonoBehaviour {
                 if (leftClick) {
                     tile.GetComponent<EditableTile>().tile = newTile;
                     spriteRenderer.sprite = selectedTile.GetComponent<SpriteRenderer>().sprite;
+                    spriteRenderer.color = selectedTile.GetComponent<SpriteRenderer>().color;
+                    tile.GetComponent<EditableTile>().defaultColor = spriteRenderer.color;
                     tile.name = selectedTile.name;
                     tile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, selectedTileRotation));
 

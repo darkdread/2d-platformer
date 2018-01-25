@@ -105,20 +105,29 @@ public class Game : SerializedMonoBehaviour {
 
         foreach (GameObject enemy in Enemy.list) {
             Rigidbody2D rb = enemy.GetComponent<Rigidbody2D>();
+            Animator anim = enemy.GetComponent<Animator>();
+
             if (rb) {
                 PausableRigidbody2D.PauseRigidbody(rb);
+            }
+
+            if (anim) {
+                anim.enabled = false;
             }
         }
 
         foreach (GameObject projectile in Projectile.list) {
             Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
+            
             if (rb) {
                 PausableRigidbody2D.PauseRigidbody(rb);
             }
+            
         }
 
         player.particleSys.Pause();
         PausableRigidbody2D.PauseRigidbody(player.GetComponent<Rigidbody2D>());
+        player.GetComponent<Animator>().enabled = false;
     }
 
     public static void ResumeGame() {
@@ -126,8 +135,14 @@ public class Game : SerializedMonoBehaviour {
 
         foreach (GameObject enemy in Enemy.list) {
             Rigidbody2D rb = enemy.GetComponent<Rigidbody2D>();
+            Animator anim = enemy.GetComponent<Animator>();
+
             if (rb) {
                 PausableRigidbody2D.ResumeRigidbody(rb);
+            }
+
+            if (anim) {
+                anim.enabled = true;
             }
         }
 
@@ -137,9 +152,10 @@ public class Game : SerializedMonoBehaviour {
                 PausableRigidbody2D.ResumeRigidbody(rb);
             }
         }
-
+        
         player.particleSys.Play();
         PausableRigidbody2D.ResumeRigidbody(player.GetComponent<Rigidbody2D>());
+        player.GetComponent<Animator>().enabled = true;
     }
 
     private void ShowPauseMenu() {

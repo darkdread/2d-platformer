@@ -9,16 +9,24 @@ public class Enemy : MonoBehaviour, IDamageableObject {
     public Transform groundCheckLeft, groundCheckRight;
 
     private Rigidbody2D rb;
-    private Animator anim;
+    private Animator animator;
     private SpriteRenderer spriteRenderer;
 
     private float health;
     private float movementTimer;
     private float movementCheckDelayTimer = 0.5f;
     private float lastEnemyX;
-    private float attackTimer;
 
-    private bool isBlocking;
+    // The difference between skillTimer and skillCooldownTimer is that the skillTimer resets on each skill cast
+    // While skillCooldownTimer resets on each specific skill cast. For example, if our enemy has a
+    // ThrowKunai and MeleeAttack skill, when the kunai is thrown, the kunai's timer and skill timer resets. But
+    // the MeleeAttack skill timer is not. Each skillCooldownTimer is independent of its own, while skillTimer is shared
+    // amont all skills.
+
+    private float skillTimer;
+    private List<float> skillCooldownTimer = new List<float>();
+
+    private bool isBlocking, isPlayerInVisionRange, isPlayerNear;
 
     // How long the knockback lasts
     public float knockbackLength = 0.5f;
@@ -38,13 +46,17 @@ public class Enemy : MonoBehaviour, IDamageableObject {
     // Use this for initialization
     private void Start () {
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         health = enemyData.health;
-        attackTimer = Random.Range(enemyData.attackDelayMin, enemyData.attackDelayMax);
+        skillTimer = Random.Range(enemyData.skillDelayMin, enemyData.skillDelayMax);
         movementTimer = movementCheckDelayTimer;
         lastEnemyX = transform.position.x;
+
+        foreach (EnemySkillObject skill in enemyData.skills) {
+            skillCooldownTimer.Add(skill.attackDelayMax);
+        }
 
         list.Add(gameObject);
 	}
@@ -75,13 +87,16 @@ public class Enemy : MonoBehaviour, IDamageableObject {
         // So to check for the player from 5 world units distance away, the box is 5 x 2 units big.
 
         Vector2 size = new Vector2(10, 2);
-        bool isPlayerNear = IsPlayerInBox(size);
-        if (isPlayerNear && attackTimer <= 0) {
-            
-        }
+        isPlayerInVisionRange = IsPlayerInBox(size);
 
         if (knockbackTimer <= 0) {
-            attackTimer -= Time.deltaTime;
+            skillTimer -= Time.deltaTime;
+            for (int i = 0; i < skillCooldownTimer.Count; i++) {
+                if (skillCooldownTimer[i] > 0) {
+                    // Reset timer
+                    skillCooldownTimer[i] -= Time.deltaTime;
+                }
+            }
 
             if (spriteRenderer.color == Color.red) {
                 spriteRenderer.color = Color.white;
@@ -89,22 +104,34 @@ public class Enemy : MonoBehaviour, IDamageableObject {
 
             lastEnemyX = transform.position.x - rb.velocity.x;
 
-            if (isPlayerNear) {
+            if (isPlayerInVisionRange) {
                 Transform player = FindObjectOfType<Player>().transform;
                 float faceLeft = (transform.position.x > player.position.x) ? -1 : 1;
                 transform.localScale = new Vector3(faceLeft, transform.localScale.y, transform.localScale.z);
 
-                if (attackTimer <= 0) {
-                    Projectile projectile = LevelController.CreateProjectileTowardsDirection(Game.current.ProjectileDictionary["kunai"], transform.position + transform.localScale.x * Vector3.right * 0.5f, transform.position + transform.localScale.x * Vector3.right * 2);
-                    LevelController.SetProjectileEnemyAgainst(projectile, "Player");
-                    attackTimer = Random.Range(enemyData.attackDelayMin, enemyData.attackDelayMax);
+                if (skillTimer <= 0) {
+                    for(int i = 0; i < skillCooldownTimer.Count; i++) {
+                        if (skillCooldownTimer[i] <= 0) {
+                            size = new Vector2(3, 3);
+                            isPlayerNear = IsPlayerInBox(size);
+
+                            // Cast spell
+                            Cast(enemyData.skills[i]);
+
+                            // Reset timer
+                            skillCooldownTimer[i] = Random.Range(enemyData.skills[i].attackDelayMin, enemyData.skills[i].attackDelayMax);
+                        }
+                    }
+                    
+                    skillTimer = Random.Range(enemyData.skillDelayMin, enemyData.skillDelayMax);
                 }
+            } else {
+                movementTimer -= Time.deltaTime;
             }
 
             float moveLeft = (transform.localScale.x < 0) ? -1 : 1;
 
             rb.velocity = new Vector2(enemyData.moveSpeed * moveLeft, rb.velocity.y);
-            movementTimer -= Time.deltaTime;
 
             //print(string.Format("curPos: {0}, lastPos: {1}", rb.position.x, lastEnemyX));
 
@@ -127,16 +154,33 @@ public class Enemy : MonoBehaviour, IDamageableObject {
         }
     }
 
+    private void Cast(EnemySkillObject skill) {
+        switch (skill.id) {
+            case 0:
+                Projectile projectile = LevelController.CreateProjectileTowardsDirection(Game.current.ProjectileDictionary["kunai"], transform.position + transform.localScale.x * Vector3.right * 0.5f, transform.position + transform.localScale.x * Vector3.right * 2);
+                LevelController.SetProjectileEnemyAgainst(projectile, "Player");
+                projectile.damage = skill.damage;
+                break;
+            case 1:
+                bool isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack");
+                print(isPlayerNear);
+                if (!isAttacking && isPlayerNear) {
+                    animator.SetTrigger("EnemyAttack");
+                }
+                break;
+        }
+    }
+
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;
         
-        //Gizmos.DrawCube(transform.position, new Vector3(10, 2, 1));
+        Gizmos.DrawCube(transform.position, new Vector3(3, 3, 1));
     }
 
     // Detect if a player is in box of size XY
     public bool IsPlayerInBox(Vector2 size) {
         Collider2D isPlayerInRange = Physics2D.OverlapBox(transform.position, size, 0, 1 << LayerMask.NameToLayer("Player"));
-
+        
         if (isPlayerInRange) {
             if (isPlayerInRange.CompareTag("Player")) {
                 return true;
