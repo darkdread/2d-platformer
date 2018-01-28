@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: f5b45722f116aa74ea2708325d1743bf
-timeCreated: 1516813270
+timeCreated: 1517166571
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -70,7 +70,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 442
+  spritePixelsToUnits: 256
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -104,11 +104,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 11067
-        width: 1253
-        height: 1581
+        y: 3276.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -116,12 +116,12 @@ TextureImporter:
       name: Attack2_1
       rect:
         serializedVersion: 2
-        x: 1253
-        y: 11067
-        width: 1253
-        height: 1581
+        x: 632
+        y: 3276.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -129,12 +129,12 @@ TextureImporter:
       name: Attack2_2
       rect:
         serializedVersion: 2
-        x: 2506
-        y: 11067
-        width: 1253
-        height: 1581
+        x: 1264
+        y: 3276.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -142,12 +142,12 @@ TextureImporter:
       name: Attack2_3
       rect:
         serializedVersion: 2
-        x: 3759
-        y: 11067
-        width: 1253
-        height: 1581
+        x: 1896
+        y: 3276.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -155,12 +155,12 @@ TextureImporter:
       name: Attack2_4
       rect:
         serializedVersion: 2
-        x: 0
-        y: 9486
-        width: 1253
-        height: 1581
+        x: 2528
+        y: 3276.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -168,12 +168,12 @@ TextureImporter:
       name: Attack2_5
       rect:
         serializedVersion: 2
-        x: 1253
-        y: 9486
-        width: 1253
-        height: 1581
+        x: 3160
+        y: 3276.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -181,12 +181,12 @@ TextureImporter:
       name: Attack2_6
       rect:
         serializedVersion: 2
-        x: 2506
-        y: 9486
-        width: 1253
-        height: 1581
+        x: 0
+        y: 2457.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -194,12 +194,12 @@ TextureImporter:
       name: Attack2_7
       rect:
         serializedVersion: 2
-        x: 3759
-        y: 9486
-        width: 1253
-        height: 1581
+        x: 632
+        y: 2457.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -207,12 +207,12 @@ TextureImporter:
       name: Attack2_8
       rect:
         serializedVersion: 2
-        x: 0
-        y: 7905
-        width: 1253
-        height: 1581
+        x: 1264
+        y: 2457.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -220,12 +220,12 @@ TextureImporter:
       name: Attack2_9
       rect:
         serializedVersion: 2
-        x: 1253
-        y: 7905
-        width: 1253
-        height: 1581
+        x: 1896
+        y: 2457.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -233,12 +233,12 @@ TextureImporter:
       name: Attack2_10
       rect:
         serializedVersion: 2
-        x: 2506
-        y: 7905
-        width: 1253
-        height: 1581
+        x: 2528
+        y: 2457.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -246,12 +246,12 @@ TextureImporter:
       name: Attack2_11
       rect:
         serializedVersion: 2
-        x: 3759
-        y: 7905
-        width: 1253
-        height: 1581
+        x: 3160
+        y: 2457.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -260,11 +260,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 6324
-        width: 1253
-        height: 1581
+        y: 1638.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -272,12 +272,12 @@ TextureImporter:
       name: Attack2_13
       rect:
         serializedVersion: 2
-        x: 1253
-        y: 6324
-        width: 1253
-        height: 1581
+        x: 632
+        y: 1638.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -285,12 +285,12 @@ TextureImporter:
       name: Attack2_14
       rect:
         serializedVersion: 2
-        x: 2506
-        y: 6324
-        width: 1253
-        height: 1581
+        x: 1264
+        y: 1638.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -298,12 +298,12 @@ TextureImporter:
       name: Attack2_15
       rect:
         serializedVersion: 2
-        x: 3759
-        y: 6324
-        width: 1253
-        height: 1581
+        x: 1896
+        y: 1638.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -311,12 +311,12 @@ TextureImporter:
       name: Attack2_16
       rect:
         serializedVersion: 2
-        x: 0
-        y: 4743
-        width: 1253
-        height: 1581
+        x: 2528
+        y: 1638.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -324,12 +324,12 @@ TextureImporter:
       name: Attack2_17
       rect:
         serializedVersion: 2
-        x: 1253
-        y: 4743
-        width: 1253
-        height: 1581
+        x: 3160
+        y: 1638.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -337,12 +337,12 @@ TextureImporter:
       name: Attack2_18
       rect:
         serializedVersion: 2
-        x: 2506
-        y: 4743
-        width: 1253
-        height: 1581
+        x: 0
+        y: 819.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -350,12 +350,12 @@ TextureImporter:
       name: Attack2_19
       rect:
         serializedVersion: 2
-        x: 3759
-        y: 4743
-        width: 1253
-        height: 1581
+        x: 632
+        y: 819.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -363,12 +363,12 @@ TextureImporter:
       name: Attack2_20
       rect:
         serializedVersion: 2
-        x: 0
-        y: 3162
-        width: 1253
-        height: 1581
+        x: 1264
+        y: 819.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -376,12 +376,12 @@ TextureImporter:
       name: Attack2_21
       rect:
         serializedVersion: 2
-        x: 1253
-        y: 3162
-        width: 1253
-        height: 1581
+        x: 1896
+        y: 819.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -389,12 +389,12 @@ TextureImporter:
       name: Attack2_22
       rect:
         serializedVersion: 2
-        x: 2506
-        y: 3162
-        width: 1253
-        height: 1581
+        x: 2528
+        y: 819.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -402,12 +402,12 @@ TextureImporter:
       name: Attack2_23
       rect:
         serializedVersion: 2
-        x: 3759
-        y: 3162
-        width: 1253
-        height: 1581
+        x: 3160
+        y: 819.8
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -416,11 +416,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 1581
-        width: 1253
-        height: 1581
+        y: 0.7999878
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -428,12 +428,12 @@ TextureImporter:
       name: Attack2_25
       rect:
         serializedVersion: 2
-        x: 1253
-        y: 1581
-        width: 1253
-        height: 1581
+        x: 632
+        y: 0.7999878
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -441,12 +441,12 @@ TextureImporter:
       name: Attack2_26
       rect:
         serializedVersion: 2
-        x: 2506
-        y: 1581
-        width: 1253
-        height: 1581
+        x: 1264
+        y: 0.7999878
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -454,12 +454,12 @@ TextureImporter:
       name: Attack2_27
       rect:
         serializedVersion: 2
-        x: 3759
-        y: 1581
-        width: 1253
-        height: 1581
+        x: 1896
+        y: 0.7999878
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -467,12 +467,12 @@ TextureImporter:
       name: Attack2_28
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1253
-        height: 1581
+        x: 2528
+        y: 0.7999878
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -480,12 +480,12 @@ TextureImporter:
       name: Attack2_29
       rect:
         serializedVersion: 2
-        x: 1253
-        y: 0
-        width: 1253
-        height: 1581
+        x: 3160
+        y: 0.7999878
+        width: 582.6667
+        height: 819.2
       alignment: 9
-      pivot: {x: 0.32, y: 0.3}
+      pivot: {x: 0.27, y: 0.36}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

@@ -166,6 +166,7 @@ public class Enemy : MonoBehaviour, IDamageableObject {
                 print(isPlayerNear);
                 if (!isAttacking && isPlayerNear) {
                     animator.SetTrigger("EnemyAttack");
+                    
                 }
                 break;
         }
@@ -174,7 +175,7 @@ public class Enemy : MonoBehaviour, IDamageableObject {
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;
         
-        Gizmos.DrawCube(transform.position, new Vector3(3, 3, 1));
+        //Gizmos.DrawCube(transform.position, new Vector3(3, 3, 1));
     }
 
     // Detect if a player is in box of size XY

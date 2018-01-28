@@ -200,6 +200,7 @@ public class Player : MonoBehaviour, IDamageableObject {
             if (Input.GetButton("Attack")) {
                 if (!isAttacking) {
                     int atkAnim = Random.Range(1, 3);
+                    //atkAnim = 10;
                     animator.SetInteger("RandAttack", atkAnim);
                 }
             }

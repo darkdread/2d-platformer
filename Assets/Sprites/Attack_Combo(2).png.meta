@@ -1,0 +1,706 @@
+fileFormatVersion: 2
+guid: 117c802018ca4f74aac3ae25259659fb
+timeCreated: 1517164810
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Attack_Combo(2)_0
+    21300002: Attack_Combo(2)_1
+    21300004: Attack_Combo(2)_2
+    21300006: Attack_Combo(2)_3
+    21300008: Attack_Combo(2)_4
+    21300010: Attack_Combo(2)_5
+    21300012: Attack_Combo(2)_6
+    21300014: Attack_Combo(2)_7
+    21300016: Attack_Combo(2)_8
+    21300018: Attack_Combo(2)_9
+    21300020: Attack_Combo(2)_10
+    21300022: Attack_Combo(2)_11
+    21300024: Attack_Combo(2)_12
+    21300026: Attack_Combo(2)_13
+    21300028: Attack_Combo(2)_14
+    21300030: Attack_Combo(2)_15
+    21300032: Attack_Combo(2)_16
+    21300034: Attack_Combo(2)_17
+    21300036: Attack_Combo(2)_18
+    21300038: Attack_Combo(2)_19
+    21300040: Attack_Combo(2)_20
+    21300042: Attack_Combo(2)_21
+    21300044: Attack_Combo(2)_22
+    21300046: Attack_Combo(2)_23
+    21300048: Attack_Combo(2)_24
+    21300050: Attack_Combo(2)_25
+    21300052: Attack_Combo(2)_26
+    21300054: Attack_Combo(2)_27
+    21300056: Attack_Combo(2)_28
+    21300058: Attack_Combo(2)_29
+    21300060: Attack_Combo(2)_30
+    21300062: Attack_Combo(2)_31
+    21300064: Attack_Combo(2)_32
+    21300066: Attack_Combo(2)_33
+    21300068: Attack_Combo(2)_34
+    21300070: Attack_Combo(2)_35
+    21300072: Attack_Combo(2)_36
+    21300074: Attack_Combo(2)_37
+    21300076: Attack_Combo(2)_38
+    21300078: Attack_Combo(2)_39
+    21300080: Attack_Combo(2)_40
+    21300082: Attack_Combo(2)_41
+    21300084: Attack_Combo(2)_42
+    21300086: Attack_Combo(2)_43
+    21300088: Attack_Combo(2)_44
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: 2
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 256
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 4096
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Attack_Combo(2)_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 7296
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_1
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 7296
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_2
+      rect:
+        serializedVersion: 2
+        x: 1756
+        y: 7296
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_3
+      rect:
+        serializedVersion: 2
+        x: 2634
+        y: 7296
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_4
+      rect:
+        serializedVersion: 2
+        x: 3512
+        y: 7296
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_5
+      rect:
+        serializedVersion: 2
+        x: 4390
+        y: 7296
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_6
+      rect:
+        serializedVersion: 2
+        x: 5268
+        y: 7296
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_7
+      rect:
+        serializedVersion: 2
+        x: 6146
+        y: 7296
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_8
+      rect:
+        serializedVersion: 2
+        x: 7024
+        y: 7296
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 6328
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_10
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 6328
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_11
+      rect:
+        serializedVersion: 2
+        x: 1756
+        y: 6328
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_12
+      rect:
+        serializedVersion: 2
+        x: 2634
+        y: 6328
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_13
+      rect:
+        serializedVersion: 2
+        x: 3512
+        y: 6328
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_14
+      rect:
+        serializedVersion: 2
+        x: 4390
+        y: 6328
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_15
+      rect:
+        serializedVersion: 2
+        x: 5268
+        y: 6328
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_16
+      rect:
+        serializedVersion: 2
+        x: 6146
+        y: 6328
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_17
+      rect:
+        serializedVersion: 2
+        x: 7024
+        y: 6328
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 5360
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_19
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 5360
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_20
+      rect:
+        serializedVersion: 2
+        x: 1756
+        y: 5360
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_21
+      rect:
+        serializedVersion: 2
+        x: 2634
+        y: 5360
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_22
+      rect:
+        serializedVersion: 2
+        x: 3512
+        y: 5360
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_23
+      rect:
+        serializedVersion: 2
+        x: 4390
+        y: 5360
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_24
+      rect:
+        serializedVersion: 2
+        x: 5268
+        y: 5360
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_25
+      rect:
+        serializedVersion: 2
+        x: 6146
+        y: 5360
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_26
+      rect:
+        serializedVersion: 2
+        x: 7024
+        y: 5360
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_27
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 4392
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_28
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 4392
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_29
+      rect:
+        serializedVersion: 2
+        x: 1756
+        y: 4392
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_30
+      rect:
+        serializedVersion: 2
+        x: 2634
+        y: 4392
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_31
+      rect:
+        serializedVersion: 2
+        x: 3512
+        y: 4392
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_32
+      rect:
+        serializedVersion: 2
+        x: 4390
+        y: 4392
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_33
+      rect:
+        serializedVersion: 2
+        x: 5268
+        y: 4392
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_34
+      rect:
+        serializedVersion: 2
+        x: 6146
+        y: 4392
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_35
+      rect:
+        serializedVersion: 2
+        x: 7024
+        y: 4392
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_36
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3424
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_37
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 3424
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_38
+      rect:
+        serializedVersion: 2
+        x: 1756
+        y: 3424
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_39
+      rect:
+        serializedVersion: 2
+        x: 2634
+        y: 3424
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_40
+      rect:
+        serializedVersion: 2
+        x: 3512
+        y: 3424
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_41
+      rect:
+        serializedVersion: 2
+        x: 4390
+        y: 3424
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_42
+      rect:
+        serializedVersion: 2
+        x: 5268
+        y: 3424
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_43
+      rect:
+        serializedVersion: 2
+        x: 6146
+        y: 3424
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Attack_Combo(2)_44
+      rect:
+        serializedVersion: 2
+        x: 7024
+        y: 3424
+        width: 782.2222
+        height: 768
+      alignment: 9
+      pivot: {x: 0.35, y: 0.42}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
