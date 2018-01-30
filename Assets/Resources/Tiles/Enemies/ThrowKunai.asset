@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Name: ThrowKunai
   m_EditorClassIdentifier: 
   attackDelayMin: 3
-  attackDelayMax: 5
+  attackDelayMax: 3
   damage: 0
   id: 0

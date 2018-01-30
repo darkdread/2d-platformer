@@ -15,6 +15,7 @@ public class Game : SerializedMonoBehaviour {
     public static Game current;
     public static bool paused;
     public static bool started;
+    public static string currentLevel;
 
     public Main main;
 
@@ -23,6 +24,7 @@ public class Game : SerializedMonoBehaviour {
 
     public LevelController levelController;
     public MyDictionary myDictionary;
+
     public static Dictionary<string, GameObject> TileDictionary = new Dictionary<string, GameObject>();
     public Dictionary<string, GameObject> ProjectileDictionary;
 
@@ -32,6 +34,11 @@ public class Game : SerializedMonoBehaviour {
     public static Player player;
     public static Transform gameHolder;
     public CameraController cameraController;
+
+    private List<Image> heartList = new List<Image>();
+    public Sprite heartFull, heartEmpty;
+    public Image heartPrefab;
+    public Transform heartHolder, playerUI;
 
     private bool combined;
     public static GameObject[,] tiles;
@@ -86,6 +93,46 @@ public class Game : SerializedMonoBehaviour {
             }
         }
 	}
+
+    public void UpdateUI() {
+
+        // Iterate through the maximum life the player has.
+        // For each iteration, if the iteration is less than the life count of the player, set the iteration's sprite to full. (Default is full)
+        for (int i = 0; i < player.maxHealth; i++) {
+            // If the current iteration is less than the amount of life the player has, set the current sprite to full heart.
+            if (i < player.health) {
+                heartList[i].sprite = heartFull;
+            } else {
+                // Otherwise, set it to empty.
+                heartList[i].sprite = heartEmpty;
+            }
+        }
+    }
+
+    private void CreatePlayerUI() {
+
+        // Show the top player UI
+        playerUI.gameObject.SetActive(true);
+
+        // Creating the life prefabs
+        for (int i = 0; i < player.maxHealth; i++) {
+            Image life = Instantiate<Image>(heartPrefab);
+            life.rectTransform.SetParent(heartHolder);
+
+            float posX = i * 57;
+            float posY = 0;
+            life.rectTransform.localPosition = new Vector2(posX, posY);
+            life.rectTransform.localScale = Vector3.one;
+            heartList.Add(life);
+        }
+    }
+
+    public static void ResetLevel() {
+        started = true;
+
+        current.BackToMenu();
+        Main.current.StartGame(currentLevel);
+    }
 
     public static void WinGame() {
         started = false;
@@ -157,7 +204,7 @@ public class Game : SerializedMonoBehaviour {
         PausableRigidbody2D.ResumeRigidbody(player.GetComponent<Rigidbody2D>());
         player.GetComponent<Animator>().enabled = true;
     }
-
+    
     private void ShowPauseMenu() {
         pauseMenuGroup.gameObject.SetActive(true);
         PauseGame();
@@ -171,6 +218,13 @@ public class Game : SerializedMonoBehaviour {
     private void BackToMenu() {
         ClearMap();
         HidePauseMenu();
+
+        playerUI.gameObject.SetActive(false);
+        foreach(Image heart in heartList) {
+            Destroy(heart.gameObject);
+        }
+        heartList.Clear();
+
         LevelController.HideDialogue();
         Main.ShowMenu();
     }
@@ -370,6 +424,7 @@ public class Game : SerializedMonoBehaviour {
         } else {
             // Game started
             started = true;
+            CreatePlayerUI();
         }
 
         // How it works

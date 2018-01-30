@@ -199,7 +199,7 @@ public class Player : MonoBehaviour, IDamageableObject {
 
             if (Input.GetButton("Attack")) {
                 if (!isAttacking) {
-                    int atkAnim = Random.Range(1, 2);
+                    int atkAnim = Random.Range(1, 3);
                     //atkAnim = 10;
                     animator.SetInteger("RandAttack", atkAnim);
                 }
@@ -350,8 +350,16 @@ public class Player : MonoBehaviour, IDamageableObject {
 
     //allows other classes to damage the player
     public void TakeDamage(float value) {
-        //decrease player's health
+        // Decrease player's health by 1
+
+        value = 1;
         health -= value;
+        Game.current.UpdateUI();
+
+        if (health <= 0) {
+            Game.ResetLevel();
+        }
+
         SetColorDuration(Color.red, knockbackLength);
 
         LevelController.FlashScreen();

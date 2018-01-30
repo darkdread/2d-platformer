@@ -10,15 +10,14 @@ public class LevelController : MonoBehaviour {
     public Canvas userInterface;
     public CanvasGroup userInterfaceGroup;
     public CanvasGroup onPlayerHitCanvasGroup;
+    public Player player;
 
     public static bool isDialogueOpen;
     public Image dialogueImage;
 
     private void Awake() {
         current = this;
-        
-        
-        
+
 
         dialogueImage.gameObject.SetActive(false);
     }

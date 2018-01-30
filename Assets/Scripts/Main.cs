@@ -211,7 +211,7 @@ public class Main : MonoBehaviour {
         levelSelection.gameObject.SetActive(false);
     }
 
-    private void StartGame(string fileName) {
+    public void StartGame(string fileName) {
         string json = SaveLoad.LoadMap(fileName);
 
         if (json == null) {
@@ -224,6 +224,7 @@ public class Main : MonoBehaviour {
 
         cameraController.targetOrtho = 5f;
         GameController.GetComponent<Game>().GenerateMapFromJson(json);
+        Game.currentLevel = fileName;
         Scroller.SetPlayerTransform(FindObjectOfType<Player>().transform);
         cooldownHolder.gameObject.SetActive(true);
 
