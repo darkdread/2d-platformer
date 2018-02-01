@@ -38,6 +38,8 @@ public class Main : MonoBehaviour {
     private static bool editorMode;
     public static Settings settings;
 
+    public GameObject tutorialHelperPrefab;
+
     public static bool EditorMode {
         get {
             return editorMode;
@@ -234,6 +236,15 @@ public class Main : MonoBehaviour {
             default:
             case "level00":
                 mapLevel = 0;
+                tilePos = new Vector2(5, 20);
+                boxSize = new Vector2(5, 5);
+                DialogueSpeaker tutorial1 = CreateSpeakerAtPos(tilePos, boxSize, "Instructor", 1);
+                GameObject howToMove = Instantiate<GameObject>(tutorialHelperPrefab, tilePos, Quaternion.identity, Game.gameHolder);
+
+                tilePos = new Vector2(48, 31);
+                boxSize = new Vector2(10, 5);
+                DialogueSpeaker tutorial2 = CreateSpeakerAtPos(tilePos, boxSize, "Instructor", 2);
+                GameObject howToAttack = Instantiate<GameObject>(tutorialHelperPrefab, tilePos, Quaternion.identity, Game.gameHolder);
                 break;
             case "level01":
                 mapLevel = 1;

@@ -455,9 +455,9 @@ public class Game : SerializedMonoBehaviour {
                 // There is a problem with rotations and colliders. The position of the points do not change, but the bounds change.
                 // With Clipper library, it is not possible to change the bounds. The only solution is to reposition each rotated tile, but the algorithm is unclear.
 
-                if (tile.transform.rotation.eulerAngles.z != 0) {
+                /*if (tile.transform.rotation.eulerAngles.z != 0) {
                     continue;
-                }
+                }*/
 
                 Vector2[] polyPoints = polygonCollider.points;
                 

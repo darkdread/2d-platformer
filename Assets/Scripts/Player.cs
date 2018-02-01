@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 public interface IDamageableObject {
+
     void TakeDamage(float value);
     void Knockback(Vector2 force);
 }
@@ -14,6 +15,8 @@ public interface IDamageableObject {
 public class Player : MonoBehaviour, IDamageableObject {
     private const float defaultJumpSpeed = 8f;
     private Game gameController;
+
+    private Dictionary<string, GameObject> colliders = new Dictionary<string, GameObject>();
 
     //the movement speed of the player
     public float moveSpeed;
@@ -96,7 +99,17 @@ public class Player : MonoBehaviour, IDamageableObject {
             Image image = obj.GetComponent<Image>();
             image.fillAmount = 1;
         }
-        
+
+
+        if (transform.Find("Colliders")) {
+            BoxCollider2D[] boxColliders = transform.Find("Colliders").GetComponentsInChildren<BoxCollider2D>();
+
+            foreach (BoxCollider2D collider in boxColliders) {
+                colliders[collider.name] = collider.gameObject;
+                collider.gameObject.SetActive(false);
+            }
+        }
+
         //player's initial health
         health = maxHealth;
         //player's initial respawn position
@@ -247,11 +260,12 @@ public class Player : MonoBehaviour, IDamageableObject {
                 }
             }
 
-            
+            animator.SetBool("Knockbacked", false);
 
         } else if (knockbackTimer > 0) {
             //if the player is getting knockedbacked, decrease the timer
             knockbackTimer -= Time.deltaTime;
+            animator.SetBool("Knockbacked", true);
         }
 
         for (int i = 0; i < skillImage.Length; i++) {
@@ -265,6 +279,24 @@ public class Player : MonoBehaviour, IDamageableObject {
             //setting variables for animator so the animator knows what state to animate
             //myAnim.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
             //myAnim.SetBool("Ground", isGrounded);
+    }
+
+    private void DisableCollider(string name) {
+        GameObject obj = colliders.TryGetValue(name, out obj) ? obj : null;
+        if (obj) {
+            obj.SetActive(false);
+        } else {
+            Debug.Log(string.Format("{0} is not found in collider dictionary!", name));
+        }
+    }
+
+    private void EnableCollider(string name) {
+        GameObject obj = colliders.TryGetValue(name, out obj) ? obj : null;
+        if (obj) {
+            obj.SetActive(true);
+        } else {
+            Debug.Log(string.Format("{0} is not found in collider dictionary!", name));
+        }
     }
 
     private void LateUpdate() {
@@ -329,8 +361,9 @@ public class Player : MonoBehaviour, IDamageableObject {
             float newX = Mathf.Abs(force.x) >= Mathf.Abs(rb.velocity.x) ? force.x : rb.velocity.x;
             float newY = Mathf.Abs(force.y) >= Mathf.Abs(rb.velocity.y) ? force.y : rb.velocity.y;
 
-            rb.AddForce(force, ForceMode2D.Impulse);
-            //rb.velocity = new Vector2(newX, newY);
+            //rb.AddForce(force, ForceMode2D.Impulse);
+            rb.velocity = new Vector2(newX, newY);
+            animator.SetBool("Knockbacked", true);
         }
     }
 
@@ -352,7 +385,7 @@ public class Player : MonoBehaviour, IDamageableObject {
     public void TakeDamage(float value) {
         // Decrease player's health by 1
 
-        value = 1;
+        value = 0;
         health -= value;
         Game.current.UpdateUI();
 

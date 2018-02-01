@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour, IDamageableObject {
     public EnemyObject enemyData;
     public Transform groundCheckLeft, groundCheckRight;
 
+    private Dictionary<string, GameObject> colliders = new Dictionary<string, GameObject>();
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
@@ -56,6 +57,15 @@ public class Enemy : MonoBehaviour, IDamageableObject {
 
         foreach (EnemySkillObject skill in enemyData.skills) {
             skillCooldownTimer.Add(skill.attackDelayMax);
+        }
+
+        if (transform.Find("Colliders")) {
+            BoxCollider2D[] boxColliders = transform.Find("Colliders").GetComponentsInChildren<BoxCollider2D>();
+
+            foreach (BoxCollider2D collider in boxColliders) {
+                colliders[collider.name] = collider.gameObject;
+                collider.gameObject.SetActive(false);
+            }
         }
 
         list.Add(gameObject);
@@ -149,8 +159,11 @@ public class Enemy : MonoBehaviour, IDamageableObject {
 
                 transform.localScale = new Vector3(moveLeft * -1, transform.localScale.y, transform.localScale.z);
             }
+            animator.SetBool("Knockbacked", false);
+
         } else {
             knockbackTimer -= Time.deltaTime;
+            animator.SetBool("Knockbacked", true);
         }
     }
 
@@ -163,12 +176,29 @@ public class Enemy : MonoBehaviour, IDamageableObject {
                 break;
             case 1:
                 bool isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack");
-                print(isPlayerNear);
                 if (!isAttacking && isPlayerNear) {
+                    animator.SetInteger("RandAttack", 0);
                     animator.SetTrigger("EnemyAttack");
-                    
                 }
                 break;
+        }
+    }
+
+    private void DisableCollider(string name) {
+        GameObject obj = colliders.TryGetValue(name, out obj) ? obj : null;
+        if (obj) {
+            obj.SetActive(false);
+        } else {
+            Debug.Log(string.Format("{0} is not found in collider dictionary!", name));
+        }
+    }
+
+    private void EnableCollider(string name) {
+        GameObject obj = colliders.TryGetValue(name, out obj) ? obj : null;
+        if (obj) {
+            obj.SetActive(true);
+        } else {
+            Debug.Log(string.Format("{0} is not found in collider dictionary!", name));
         }
     }
 
@@ -200,6 +230,7 @@ public class Enemy : MonoBehaviour, IDamageableObject {
 
             spriteRenderer.color = Color.red;
             rb.velocity = force;
+            animator.SetBool("Knockbacked", true);
         }
     }
 

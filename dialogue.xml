@@ -3,6 +3,16 @@
 <Dialogue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<LevelContainer>
 		<Level name="1">
+		<Speaker name="Instructor">
+				<NewDialogue id="1">
+					<Text>Press space to skip the current dialogue text, and again to continue.</Text>
+					<Text>Press A/D to move horizontally, and Space to jump.</Text>
+				</NewDialogue>
+				<NewDialogue id="2">
+					<Text>Press E to attack.</Text>
+					<Text>Press F to use your special ability.</Text>
+				</NewDialogue>
+			</Speaker>
 			<Speaker name="Narrator">
 				<NewDialogue id="1" nextDialogueSpeaker="Yasuo" nextDialogueNumber="1">
 					<Text>Dialogue 1, speaker 1, text 1.</Text>
