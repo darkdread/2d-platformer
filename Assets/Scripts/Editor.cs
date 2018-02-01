@@ -106,7 +106,10 @@ public class Editor : MonoBehaviour {
             button.GetComponent<Image>().sprite = t.GetComponent<SpriteRenderer>().sprite;
             button.GetComponent<Image>().color = t.GetComponent<SpriteRenderer>().color;
             button.GetComponent<RectTransform>().localPosition = new Vector3(xPos, yPos, 0);
-            button.GetComponent<Button>().onClick.AddListener(OnClickTile);
+
+            button.GetComponent<Button>().onClick.AddListener(delegate {
+                OnClickTile(button);
+            });
         }
 
         // Set the container height to contain all the tiles
@@ -115,7 +118,7 @@ public class Editor : MonoBehaviour {
 
         // Default selected tile.
         SelectTile(tiles[0]);
-
+        //Input.GetTouch(0).rawPosition
         showTerrainBtn.onClick.AddListener(delegate {
             ShowTileType("Terrain");
         });
@@ -229,9 +232,9 @@ public class Editor : MonoBehaviour {
     }
 
     // Clicking on Menu Tiles
-    private void OnClickTile() {
-        GameObject clickedTile = EventSystem.current.currentSelectedGameObject;
-
+    private void OnClickTile(GameObject clickedTile) {
+        //GameObject clickedTile = EventSystem.current.currentSelectedGameObject;
+        
         SelectTile(clickedTile);
     }
 
