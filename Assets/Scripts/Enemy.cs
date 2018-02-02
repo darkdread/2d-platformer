@@ -34,6 +34,12 @@ public class Enemy : MonoBehaviour, IDamageableObject {
     // The amount of time to trigger knockback again
     private float knockbackTimer;
 
+    public GameObject bloodSpray;
+
+    public GameObject BloodSpray {
+        get; set;
+    }
+
     public bool IsBlocking {
         get {
             return isBlocking;
@@ -54,6 +60,7 @@ public class Enemy : MonoBehaviour, IDamageableObject {
         skillTimer = Random.Range(enemyData.skillDelayMin, enemyData.skillDelayMax);
         movementTimer = movementCheckDelayTimer;
         lastEnemyX = transform.position.x;
+        BloodSpray = bloodSpray;
 
         foreach (EnemySkillObject skill in enemyData.skills) {
             skillCooldownTimer.Add(skill.attackDelayMax);

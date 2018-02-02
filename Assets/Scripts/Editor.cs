@@ -118,7 +118,7 @@ public class Editor : MonoBehaviour {
 
         // Default selected tile.
         SelectTile(tiles[0]);
-        //Input.GetTouch(0).rawPosition
+        
         showTerrainBtn.onClick.AddListener(delegate {
             ShowTileType("Terrain");
         });

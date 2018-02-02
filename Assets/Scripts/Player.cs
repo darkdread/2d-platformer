@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 public interface IDamageableObject {
+    GameObject BloodSpray { get; set; }
 
     void TakeDamage(float value);
     void Knockback(Vector2 force);
@@ -81,6 +82,10 @@ public class Player : MonoBehaviour, IDamageableObject {
     public UnityEvent JumpEvent;
 
     private float colorDuration;
+
+    public GameObject BloodSpray {
+        get; set;
+    }
 
     // Use this for initialization
     private void Start() {

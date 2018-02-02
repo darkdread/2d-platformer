@@ -102,7 +102,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1900080833624420}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -44.832645, y: -3.0412214, z: 0}
+  m_LocalPosition: {x: -36.60887, y: -3.7072906, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4462258189861198}
@@ -291,6 +291,7 @@ MonoBehaviour:
   groundCheckLeft: {fileID: 0}
   groundCheckRight: {fileID: 4597955674665544}
   knockbackLength: 0.5
+  bloodSpray: {fileID: 1112264610281384, guid: 7b5d914176280b74a967fe6d0587673b, type: 2}
 --- !u!114 &114747354787379646
 MonoBehaviour:
   m_ObjectHideFlags: 1
